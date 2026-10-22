@@ -200,7 +200,7 @@ Một mục từ:
 | Rủi ro | Giảm thiểu |
 |---|---|
 | Thiếu đáp án chấp nhận → chấm dịch câu "khó tính" | Nút "Tôi đúng mà" + quy trình duyệt bổ sung; nói rõ giới hạn ngay từ đầu |
-| Windows cảnh báo "phần mềm không rõ nguồn gốc" (SmartScreen) khi cài | Hướng dẫn bấm "Vẫn chạy", hoặc khách mua chứng thư ký số code-signing (~5–10 triệu/năm) |
+| Windows cảnh báo "phần mềm không rõ nguồn gốc" (SmartScreen); máy Win 11 bật Smart App Control **chặn hẳn** app chưa ký | Phát hành qua **Microsoft Store** (Microsoft ký hộ, tài khoản cá nhân miễn phí) cho máy có Store; bản `.exe` ký bằng chứng thư OV (~5–10 triệu/năm) cho phòng máy không có Store; giai đoạn demo: chép qua USB + hướng dẫn "Vẫn chạy" |
 | Antivirus nhà trường chặn file `.exe` lạ | Có ký số; hoặc bản portable; gửi hướng dẫn cho IT |
 | Unikey xung đột khi gõ ký tự Ê đê | Thanh phím ảo + phím tắt riêng; test với Unikey & EVKey ở Phase 0 |
 | Cập nhật nội dung khó vì máy không có mạng | Gói nội dung `.ede` chép qua USB (Phase 3) |

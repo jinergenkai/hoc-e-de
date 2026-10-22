@@ -22,7 +22,8 @@
 | Hạng mục | Bắt buộc? | Ước tính |
 |---|---|---|
 | Hosting / máy chủ | Không cần (app offline) | 0đ |
-| Chứng thư ký số code-signing (bỏ cảnh báo Windows) | Khuyến nghị nếu phát cho nhiều trường/cơ quan | ~5 – 10 triệu/năm |
+| Phát hành qua Microsoft Store (Microsoft ký hộ, hết cảnh báo) | Khuyến nghị | Tài khoản cá nhân: 0đ · tài khoản tổ chức: ~99 USD một lần |
+| Chứng thư ký số OV cho bản `.exe` ngoài Store | Nếu phòng máy không dùng được Store | ~5 – 10 triệu/năm, cần giấy tờ pháp nhân/cá nhân |
 | Claude API + máy chủ trung gian (chỉ Phase 4) | Không | vài trăm nghìn – 1 triệu/tháng tuỳ lượng dùng; đặt trần chi tiêu |
 
 **Bảo trì sau bàn giao (tuỳ chọn):** 2 – 3 triệu/tháng (sửa lỗi, đóng gói nội dung mới ≤ 2 lần/tháng).
@@ -64,7 +65,7 @@
 ## Phase 3 — Phân phối & quản trị (1.5 tuần)
 
 - [ ] Bộ cài `.exe` chính thức (biểu tượng, tên, gỡ cài đặt) + bản portable
-- [ ] Ký số nếu khách có chứng thư
+- [ ] Đóng gói bản Microsoft Store (MSIX) + nộp duyệt; ký số bản `.exe` nếu khách có chứng thư OV
 - [ ] Gói nội dung `.ede`: xuất từ máy người soạn, nhập trên máy khác (C-05)
 - [ ] Sửa/xoá từng từ trong app (C-04), duyệt đề xuất "Tôi đúng mà" (C-06)
 - [ ] Xuất kết quả học ra Excel (U-06), sao lưu/khôi phục tiến độ (U-07)
