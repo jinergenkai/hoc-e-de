@@ -102,7 +102,7 @@ export function AudioButton({ id, size = 44 }: { id: string; size?: number }) {
 
 /** Kept for existing call sites: a diamond brocade band without edges. */
 export function BrocadeStripe({ height = 14, sx }: { height?: number; sx?: object }) {
-  return <BrocadeBand motif="skirt" height={height} sx={sx} />;
+  return <BrocadeBand motif="diamond" height={height} sx={sx} />;
 }
 
 // ----------------------------------------------------------------------
@@ -136,7 +136,7 @@ export function PageTitle({ title, subtitle, action }: { title: string; subtitle
             {subtitle}
           </Typography>
         )}
-        <BrocadeBand motif="sleeve" height={9} sx={{ width: 96, mt: 1.5, borderRadius: 0.5, overflow: 'hidden' }} />
+        <BrocadeBand motif="zigzag" height={8} sx={{ width: 96, mt: 1.5, borderRadius: 0.5, overflow: 'hidden' }} />
       </Box>
       {action && <Box sx={{ flexShrink: 0, whiteSpace: 'nowrap' }}>{action}</Box>}
     </Stack>

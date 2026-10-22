@@ -20,7 +20,7 @@ import { isEnabled, releaseOf, SHOW_TEASERS } from 'src/config/release';
 
 import { Iconify } from 'src/components/iconify';
 import { ProfileAvatar } from 'src/sections/profiles';
-import { Pompom, BROCADE, BrocadeBand, BrocadeColumn, brocadeBackdrop } from 'src/components/ornaments';
+import { Pompom, BROCADE, BrocadeBand, brocadeBackdrop } from 'src/components/ornaments';
 
 export const NAV: { path: string; title: string; icon: string; feature?: FeatureKey }[] = [
   { path: '/', title: 'Trang chủ', icon: 'solar:home-smile-bold-duotone' },
@@ -75,9 +75,9 @@ function Nav() {
   const items = NAV.filter((n) => !n.feature || isEnabled(n.feature) || SHOW_TEASERS);
 
   return (
-    <Box component="nav" sx={{ width: NAV_WIDTH, flexShrink: 0, position: 'sticky', top: 0, height: '100vh', display: 'flex', bgcolor: 'background.paper' }}>
+    <Box component="nav" sx={{ width: NAV_WIDTH, flexShrink: 0, position: 'sticky', top: 0, height: '100vh', display: 'flex', bgcolor: 'background.paper', borderRight: (t) => `1px dashed ${alpha(t.palette.grey[500], 0.24)}` }}>
       <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        <BrocadeBand motif="skirt" height={30} />
+        <BrocadeBand motif="diamond" height={14} edges />
         <Stack direction="row" alignItems="center" spacing={1.5} sx={{ px: 3, py: 3 }}>
           <Logo />
           <Box>
@@ -128,9 +128,8 @@ function Nav() {
             <LinearProgress variant="determinate" value={pct} color="secondary" sx={{ bgcolor: alpha(BROCADE.white, 0.16) }} />
           </Box>
         )}
-        <BrocadeBand motif="sleeve" height={14} />
+        <BrocadeBand motif="sawtooth" height={12} />
       </Box>
-      <BrocadeColumn width={12} />
     </Box>
   );
 }

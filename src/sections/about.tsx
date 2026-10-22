@@ -27,7 +27,7 @@ export function AboutPage() {
 
       <Box sx={{ mb: 4 }}>
         <Card sx={{ overflow: 'hidden', borderBottomLeftRadius: 0, borderBottomRightRadius: 0, color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop(BROCADE.gold, 0.08, 64) }}>
-          <BrocadeBand motif="skirt" height={32} />
+          <BrocadeBand motif="diamond" height={16} edges />
           <Stack direction={{ xs: 'column', md: 'row' }} alignItems="center" spacing={4} sx={{ p: { xs: 4, md: 5 } }}>
             <Gong size={150}>
               <Typography sx={{ fontFamily: '"Noto Sans"', fontWeight: 800, fontSize: 56, color: '#5F120B', lineHeight: 1 }}>Ƀ</Typography>
@@ -48,7 +48,7 @@ export function AboutPage() {
               </Typography>
             </Box>
           </Stack>
-          <BrocadeBand motif="skirt" height={32} />
+          <BrocadeBand motif="sawtooth" height={12} />
         </Card>
         <Fringe height={26} />
       </Box>

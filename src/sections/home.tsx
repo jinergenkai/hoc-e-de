@@ -84,7 +84,7 @@ function Hero({ onLearn, onSecond }: { onLearn: () => void; onSecond: () => void
         overflow: 'hidden',
       }}
     >
-      <BrocadeBand motif="sleeve" height={14} />
+      <BrocadeBand motif="sawtooth" height={12} />
       <Pompom size={18} sx={{ position: 'absolute', top: 6, left: 28, zIndex: 2 }} />
       <Pompom size={18} sx={{ position: 'absolute', top: 6, right: 28, zIndex: 2 }} />
       <Stack direction="row" alignItems="center" sx={{ p: { xs: 4, md: 5 }, position: 'relative' }}>
@@ -115,7 +115,7 @@ function Hero({ onLearn, onSecond }: { onLearn: () => void; onSecond: () => void
         </Box>
         <FloatingLetters />
       </Stack>
-      <BrocadeBand motif="skirt" height={40} />
+      <BrocadeBand motif="diamond" height={18} edges />
     </Card>
   );
 }

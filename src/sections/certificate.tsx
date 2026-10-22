@@ -190,7 +190,7 @@ function Certificate({ name, date, known, xp, sample }: { name: string; date: Da
         printColorAdjust: 'exact',
       }}
     >
-      <BrocadeBand motif="skirt" height={44} />
+      <BrocadeBand motif="diamond" height={24} edges />
       <Stack direction="row" sx={{ flexGrow: 1, minHeight: 0 }}>
         <BrocadeColumn width={22} />
         <Box sx={{ flexGrow: 1, m: 2.5, border: `2px solid ${BROCADE.red}`, outline: `1px solid ${BROCADE.red}`, outlineOffset: 4, position: 'relative' }}>
@@ -240,7 +240,7 @@ function Certificate({ name, date, known, xp, sample }: { name: string; date: Da
         </Box>
         <BrocadeColumn width={22} />
       </Stack>
-      <BrocadeBand motif="skirt" height={44} />
+      <BrocadeBand motif="diamond" height={24} edges />
 
       {sample && (
         <Typography
