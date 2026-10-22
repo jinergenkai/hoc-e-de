@@ -80,7 +80,7 @@ function Hero({ onLearn, onSecond }: { onLearn: () => void; onSecond: () => void
       sx={{
         color: 'common.white',
         bgcolor: BROCADE.black,
-        ...brocadeBackdrop(BROCADE.cream, 0.12, 72),
+        ...brocadeBackdrop(BROCADE.gold, 0.12, 72),
         overflow: 'hidden',
       }}
     >
@@ -272,7 +272,7 @@ function Recent({ sessions }: { sessions: ReturnType<typeof useProgress.getState
 function ComingSoon() {
   const next = upcoming().slice(0, 2);
   return (
-    <Card sx={{ p: 3, color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop(BROCADE.cream, 0.08, 48) }}>
+    <Card sx={{ p: 3, color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop(BROCADE.gold, 0.08, 48) }}>
       <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
         <Iconify icon="solar:rocket-2-bold-duotone" width={22} sx={{ color: BROCADE.yellow }} />
         <Typography variant="subtitle2">Sắp ra mắt</Typography>

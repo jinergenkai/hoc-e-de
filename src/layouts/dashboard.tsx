@@ -117,7 +117,7 @@ function Nav() {
         </Stack>
 
         {isEnabled('gamification') && (
-          <Box sx={{ m: 2, p: 2.5, borderRadius: 2, position: 'relative', overflow: 'hidden', color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop(BROCADE.cream, 0.1, 40) }}>
+          <Box sx={{ m: 2, p: 2.5, borderRadius: 2, position: 'relative', overflow: 'hidden', color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop(BROCADE.gold, 0.1, 40) }}>
             <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
               <Iconify icon="solar:cup-star-bold-duotone" width={24} sx={{ color: BROCADE.yellow }} />
               <Typography variant="subtitle2">Mục tiêu hôm nay</Typography>

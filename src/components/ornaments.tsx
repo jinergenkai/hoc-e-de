@@ -161,16 +161,15 @@ export function BrocadeColumn({ width = 12, sx }: { width?: number; sx?: SxProps
 }
 
 /**
- * Background for large dark surfaces: black cloth with a lattice of woven diamonds
- * (cream outline, red centre). `size` is the tile size in px.
+ * Background for large dark surfaces: black cloth with a lattice of nested gold
+ * diamonds. `size` is the tile size in px.
  */
-export function brocadeBackdrop(color: string = c.cream, opacity = 0.08, size = 56): object {
+export function brocadeBackdrop(color: string = c.gold, opacity = 0.08, size = 56): object {
   const o = opacity;
   const body = [
-    `<path d='M28 6 50 28 28 50 6 28Z' fill='none' stroke='${color}' stroke-opacity='${o}' stroke-width='2'/>`,
-    `<path d='M28 15 41 28 28 41 15 28Z' fill='none' stroke='${color}' stroke-opacity='${o * 0.8}' stroke-width='1.5'/>`,
-    `<path d='M28 23 33 28 28 33 23 28Z' fill='${c.red}' fill-opacity='${Math.min(1, o * 4)}'/>`,
-    `<path d='M0 0 4 4 0 8M56 0 52 4 56 8M0 56 4 52 0 48M56 56 52 52 56 48' fill='none' stroke='${color}' stroke-opacity='${o}' stroke-width='1.5'/>`,
+    `<g fill='none' stroke='${color}' stroke-opacity='${o}' stroke-width='2'><path d='M28 4 52 28 28 52 4 28Z'/><path d='M28 14 42 28 28 42 14 28Z'/></g>`,
+    `<path d='M28 24 32 28 28 32 24 28Z' fill='${color}' fill-opacity='${o * 1.6}'/>`,
+    `<path d='M0 0 4 4M56 0 52 4M0 56 4 52M56 56 52 52' stroke='${color}' stroke-opacity='${o}' stroke-width='2'/>`,
   ].join('');
   return {
     backgroundImage: svg(56, 56, body),

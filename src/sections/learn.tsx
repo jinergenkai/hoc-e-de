@@ -252,7 +252,7 @@ function Ghost({ offset }: { offset: number }) {
         height: 340,
         borderRadius: 3,
         bgcolor: BROCADE.black,
-        ...brocadeBackdrop(BROCADE.cream, 0.16, 40),
+        ...brocadeBackdrop(BROCADE.gold, 0.16, 40),
         boxShadow: (t) => t.customShadows.z8,
         transform: `translateY(${offset * 12}px) scale(${1 - offset * 0.04})`,
         opacity: 1 - offset * 0.25,

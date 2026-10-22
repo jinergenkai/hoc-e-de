@@ -72,7 +72,7 @@ export function CulturePage() {
 function Cover({ item, src, height }: { item: CultureItem; src?: string; height: number }) {
   if (src) return <Box component="img" src={`./${src}`} alt={item.title} sx={{ width: 1, height, objectFit: 'cover', display: 'block' }} />;
   return (
-    <Stack alignItems="center" justifyContent="center" spacing={1} sx={{ height, color: BROCADE.cream, bgcolor: BROCADE.black, ...brocadeBackdrop(BROCADE.cream, 0.1, 48) }}>
+    <Stack alignItems="center" justifyContent="center" spacing={1} sx={{ height, color: BROCADE.cream, bgcolor: BROCADE.black, ...brocadeBackdrop(BROCADE.gold, 0.1, 48) }}>
       <Iconify icon={item.icon} width={56} sx={{ color: BROCADE.cream }} />
       <Typography variant="caption" sx={{ opacity: 0.6 }}>
         Ảnh sẽ được bổ sung
