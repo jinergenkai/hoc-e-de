@@ -30,6 +30,7 @@ export const NAV: { path: string; title: string; icon: string; feature?: Feature
   { path: '/translate', title: 'Dịch thông minh', icon: 'solar:magic-stick-3-bold-duotone', feature: 'translate' },
   { path: '/alphabet', title: 'Bảng chữ cái', icon: 'solar:text-bold-duotone', feature: 'alphabet' },
   { path: '/dictionary', title: 'Từ điển', icon: 'solar:book-bookmark-bold-duotone', feature: 'dictionary' },
+  { path: '/about', title: 'Giới thiệu', icon: 'solar:info-circle-bold-duotone' },
 ];
 
 const NAV_WIDTH = 280;

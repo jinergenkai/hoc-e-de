@@ -12,6 +12,7 @@ import { DashboardLayout } from 'src/layouts/dashboard';
 import { EXPIRES, RELEASE, RELEASES, isExpired, isEnabled, IS_PREVIEW } from 'src/config/release';
 
 import { HomePage } from 'src/sections/home';
+import { AboutPage } from 'src/sections/about';
 import { AlphabetPage } from 'src/sections/alphabet';
 import { TranslatePage } from 'src/sections/translate';
 import { DictionaryPage } from 'src/sections/dictionary';
@@ -84,6 +85,7 @@ const router = createHashRouter([
           { path: '/translate', element: <Gate feature="translate"><TranslatePage /></Gate> },
           { path: '/alphabet', element: <Gate feature="alphabet"><AlphabetPage /></Gate> },
           { path: '/dictionary', element: <Gate feature="dictionary"><DictionaryPage /></Gate> },
+          { path: '/about', element: <AboutPage /> },
           { path: '*', element: <Navigate to="/" replace /> },
         ],
       },
