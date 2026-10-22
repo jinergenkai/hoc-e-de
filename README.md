@@ -16,7 +16,8 @@ npm run electron       # mở bằng Electron (sau khi build)
 npm run dist:win       # đóng gói .exe (chạy trên Windows)
 ```
 
-Mỗi lần đẩy lên nhánh `master`, GitHub Actions build file `.exe` (tab **Actions → Build Windows app → Artifacts**).
+Mỗi lần đẩy lên nhánh `master`, GitHub Actions build file `.exe` đầy đủ (tab **Actions → Build Windows app → Artifacts**).
+Muốn build bản theo đợt (chỉ mở một phần tính năng, có nhãn xem trước, có hạn dùng): **Run workflow** và nhập đợt — xem [docs/06](docs/06-releases-roadmap.md).
 
 ## Thêm âm thanh
 
@@ -29,10 +30,11 @@ electron/            cửa sổ Electron (contextIsolation, không nodeIntegrati
 src/theme/           theme port từ Minimal UI (MIT): bảng màu, chữ, bóng, component
 src/layouts/         khung dashboard: menu trái + header (chuỗi ngày, XP, cấp)
 src/sections/        các màn: home, learn, challenge, practice, translate, alphabet, dictionary
-src/components/      thẻ quẹt, ô nhập Ê-đê, khung trò chơi, icon offline…
+src/components/      thẻ quẹt, ô nhập Ê-đê, khung trò chơi, hoạ tiết thổ cẩm & chiêng, icon offline…
 src/utils/           text (Unicode, gõ tắt), grader (chấm điểm), translator (dịch thông minh)
 src/data/            dữ liệu mẫu: từ vựng, câu, bảng chữ cái
-src/store/           tiến độ (XP, chuỗi ngày, thẻ đã thuộc) lưu trên máy
+src/store/           tiến độ (XP, chuỗi ngày, thẻ đã thuộc) + hồ sơ người học, lưu trên máy
+src/config/release.ts các đợt phát hành, bật/tắt tính năng theo đợt
 ```
 
 ## Tài liệu
@@ -42,3 +44,4 @@ src/store/           tiến độ (XP, chuỗi ngày, thẻ đã thuộc) lưu t
 3. [Design system](docs/03-design-system.md) — port từ Minimal UI
 4. [Giải thích tính năng & giới hạn](docs/04-feature-scope.md)
 5. [Nghiên cứu tiếng Ê-đê](docs/05-research-ede.md)
+6. [Phát hành theo đợt & danh mục mở rộng](docs/06-releases-roadmap.md) — build từng đợt, lịch công bố gắn mốc thanh toán

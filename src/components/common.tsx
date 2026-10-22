@@ -10,12 +10,13 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { alpha, useTheme } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 
 import audioManifest from 'src/data/audio-manifest.json';
 import { SAMPLE_DATA_NOTICE } from 'src/data/vocab';
 
 import { Iconify } from './iconify';
+import { BrocadeBand, CornerDiamond } from './ornaments';
 
 // ----------------------------------------------------------------------
 
@@ -80,26 +81,9 @@ export function AudioButton({ id, size = 44 }: { id: string; size?: number }) {
 
 // ----------------------------------------------------------------------
 
-/** Brocade (thổ cẩm) stripe: repeating diamonds in red / black / gold. */
+/** Kept for existing call sites: a diamond brocade band without edges. */
 export function BrocadeStripe({ height = 14, sx }: { height?: number; sx?: object }) {
-  const theme = useTheme();
-  const red = theme.palette.primary.main;
-  const gold = theme.palette.secondary.main;
-  const dark = theme.palette.grey[800];
-  const w = height * 2;
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${height}' viewBox='0 0 28 14'><rect width='28' height='14' fill='${dark}'/><path d='M0 7 L7 0 L14 7 L7 14Z' fill='${red}'/><path d='M14 7 L21 0 L28 7 L21 14Z' fill='${gold}'/><path d='M5 7 L7 5 L9 7 L7 9Z' fill='${gold}'/><path d='M19 7 L21 5 L23 7 L21 9Z' fill='${red}'/></svg>`;
-  return (
-    <Box
-      sx={{
-        height,
-        width: 1,
-        backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(svg)}")`,
-        backgroundRepeat: 'repeat-x',
-        backgroundSize: `${w}px ${height}px`,
-        ...sx,
-      }}
-    />
-  );
+  return <BrocadeBand motif="diamond" height={height} edges={false} sx={sx} />;
 }
 
 // ----------------------------------------------------------------------
@@ -124,12 +108,16 @@ export function PageTitle({ title, subtitle, action }: { title: string; subtitle
   return (
     <Stack direction="row" alignItems="flex-end" justifyContent="space-between" spacing={2} sx={{ mb: 4 }}>
       <Box>
-        <Typography variant="h4">{title}</Typography>
+        <Stack direction="row" alignItems="center" spacing={1.25}>
+          <CornerDiamond size={22} />
+          <Typography variant="h4">{title}</Typography>
+        </Stack>
         {subtitle && (
           <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }}>
             {subtitle}
           </Typography>
         )}
+        <BrocadeBand motif="zigzag" height={8} edges={false} sx={{ width: 96, mt: 1.5, borderRadius: 0.5, overflow: 'hidden' }} />
       </Box>
       {action}
     </Stack>

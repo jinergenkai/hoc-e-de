@@ -16,6 +16,7 @@ import { useProgress } from 'src/store/progress';
 
 import { Iconify } from 'src/components/iconify';
 import { TopicGrid } from 'src/components/topic-grid';
+import { BROCADE, brocadeBackdrop } from 'src/components/ornaments';
 import { SwipeCard, type SwipeCardHandle } from 'src/components/swipe-card';
 import { GameShell, ScorePill, ResultCard } from 'src/components/game-shell';
 import { KeyHint, RadeText, PageTitle, AudioButton, celebrate, shuffle, SampleDataChip } from 'src/components/common';
@@ -248,7 +249,8 @@ function Ghost({ offset }: { offset: number }) {
         maxWidth: '86vw',
         height: 340,
         borderRadius: 3,
-        bgcolor: 'background.paper',
+        bgcolor: BROCADE.black,
+        ...brocadeBackdrop('#E0A100', 0.16, 40),
         boxShadow: (t) => t.customShadows.z8,
         transform: `translateY(${offset * 12}px) scale(${1 - offset * 0.04})`,
         opacity: 1 - offset * 0.25,

@@ -7,6 +7,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { alpha, useTheme } from '@mui/material/styles';
 
+import { BrocadeBand, CornerDiamond } from './ornaments';
+
 export type SwipeDir = 'left' | 'right';
 
 export type SwipeCardHandle = { swipe: (dir: SwipeDir) => void };
@@ -81,6 +83,9 @@ export const SwipeCard = forwardRef<SwipeCardHandle, Props>(function SwipeCard(
           overflow: 'hidden',
         }}
       >
+        <BrocadeBand motif="sawtooth" height={10} edges={false} sx={{ position: 'absolute', top: 0, left: 0 }} />
+        <CornerDiamond size={18} sx={{ position: 'absolute', left: 14, bottom: 14, opacity: 0.85 }} />
+        <CornerDiamond size={18} sx={{ position: 'absolute', right: 14, bottom: 14, opacity: 0.85 }} />
         {children}
         <Stamp opacity={rightOpacity} label={rightLabel} color={theme.palette.success.main} side="left" />
         <Stamp opacity={leftOpacity} label={leftLabel} color={theme.palette.warning.dark} side="right" />

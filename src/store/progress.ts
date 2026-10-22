@@ -1,6 +1,10 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 
+import { isEnabled } from 'src/config/release';
+
+import { activeStorageKey, LEGACY_PROGRESS_KEY } from './profiles';
+
 export type SessionKind = 'learn' | 'challenge' | 'practice';
 
 export type CardStat = { known: boolean; seen: number; misses: number; last: number };
@@ -71,9 +75,27 @@ export const useProgress = create<ProgressState>()(
         })),
       reset: () => set({ ...initial, today: dayKey() }),
     }),
-    { name: 'hriam-ede-progress', storage: createJSONStorage(() => localStorage), version: 1 }
+    {
+      name: isEnabled('profiles') ? activeStorageKey() : LEGACY_PROGRESS_KEY,
+      storage: createJSONStorage(() => localStorage),
+      version: 1,
+    }
   )
 );
+
+/** Point the progress store at another profile's storage key and load it. */
+export function switchProgressTo(storageKey: string) {
+  useProgress.persist.setOptions({ name: storageKey });
+  let stored: string | null = null;
+  try {
+    stored = localStorage.getItem(storageKey);
+  } catch {
+    /* storage unavailable */
+  }
+  // Rehydrating an empty key would keep the previous learner's state, so start fresh instead
+  if (stored) useProgress.persist.rehydrate();
+  else useProgress.setState({ ...initial, today: dayKey() });
+}
 
 export const levelOf = (xp: number) => Math.floor(Math.sqrt(xp / 50)) + 1;
 export const xpForLevel = (level: number) => (level - 1) ** 2 * 50;

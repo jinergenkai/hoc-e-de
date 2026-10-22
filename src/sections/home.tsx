@@ -12,9 +12,13 @@ import { alpha } from '@mui/material/styles';
 import { words, topicById } from 'src/data/vocab';
 import { dayKey, levelOf, useProgress } from 'src/store/progress';
 
+import { isEnabled, upcoming, SHOW_TEASERS } from 'src/config/release';
+
 import { Iconify } from 'src/components/iconify';
+import { Leaderboard } from 'src/sections/profiles';
+import { BROCADE, BrocadeBand, CornerDiamond, brocadeBackdrop } from 'src/components/ornaments';
 import { TopicGrid } from 'src/components/topic-grid';
-import { RadeText, AudioButton, BrocadeStripe, SampleDataChip } from 'src/components/common';
+import { RadeText, AudioButton, SampleDataChip } from 'src/components/common';
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -27,13 +31,23 @@ export function HomePage() {
 
   return (
     <Stack spacing={4}>
-      <Hero onLearn={() => navigate('/learn')} onChallenge={() => navigate('/challenge/all')} />
+      <Hero onLearn={() => navigate('/learn')} onSecond={() => navigate(isEnabled('challenge') ? '/challenge/all' : '/alphabet')} />
 
       <Grid container spacing={3}>
         <Stat title="Từ đã thuộc" value={`${knownCount}/${words.length}`} icon="solar:card-2-bold-duotone" color="primary" />
-        <Stat title="Chuỗi ngày học" value={`${streak} ngày`} icon="solar:fire-bold-duotone" color="error" />
-        <Stat title="Kỷ lục thử thách" value={`${best} điểm`} icon="solar:medal-ribbons-star-bold-duotone" color="secondary" />
-        <Stat title="Cấp độ" value={`Cấp ${levelOf(xp)}`} icon="solar:star-bold-duotone" color="info" />
+        {isEnabled('gamification') ? (
+          <>
+            <Stat title="Chuỗi ngày học" value={`${streak} ngày`} icon="solar:fire-bold-duotone" color="error" />
+            <Stat title="Kỷ lục thử thách" value={`${best} điểm`} icon="solar:medal-ribbons-star-bold-duotone" color="secondary" />
+            <Stat title="Cấp độ" value={`Cấp ${levelOf(xp)}`} icon="solar:star-bold-duotone" color="info" />
+          </>
+        ) : (
+          <>
+            <Stat title="Chủ đề" value={`${topicById.size} chủ đề`} icon="solar:book-bookmark-bold-duotone" color="secondary" />
+            <Stat title="Bảng chữ cái" value="38 chữ" icon="solar:text-bold-duotone" color="info" />
+            <Stat title="Lượt học" value={`${sessions.length} lượt`} icon="solar:chart-2-bold-duotone" color="error" />
+          </>
+        )}
       </Grid>
 
       <Grid container spacing={3}>
@@ -47,7 +61,9 @@ export function HomePage() {
         <Grid size={{ xs: 12, md: 4 }}>
           <Stack spacing={3}>
             <WordOfDay />
+            {isEnabled('profiles') && <Leaderboard />}
             <Recent sessions={sessions} />
+            {SHOW_TEASERS && upcoming().length > 0 && <ComingSoon />}
           </Stack>
         </Grid>
       </Grid>
@@ -57,7 +73,7 @@ export function HomePage() {
 
 // ----------------------------------------------------------------------
 
-function Hero({ onLearn, onChallenge }: { onLearn: () => void; onChallenge: () => void }) {
+function Hero({ onLearn, onSecond }: { onLearn: () => void; onSecond: () => void }) {
   return (
     <Card
       sx={{
@@ -66,7 +82,9 @@ function Hero({ onLearn, onChallenge }: { onLearn: () => void; onChallenge: () =
         overflow: 'hidden',
       }}
     >
+      <BrocadeBand motif="sawtooth" height={12} edges={false} />
       <Stack direction="row" alignItems="center" sx={{ p: { xs: 4, md: 5 }, position: 'relative' }}>
+        <Box sx={{ position: 'absolute', inset: 0, left: '50%', ...brocadeBackdrop('#FFFFFF', 0.1, 64), maskImage: 'linear-gradient(90deg, transparent, #000 40%)' }} />
         <Box sx={{ maxWidth: 560, position: 'relative', zIndex: 1 }}>
           <Typography variant="overline" sx={{ opacity: 0.72 }}>
             Hriăm klei Êđê
@@ -84,17 +102,17 @@ function Hero({ onLearn, onChallenge }: { onLearn: () => void; onChallenge: () =
             <Button
               size="large"
               variant="outlined"
-              onClick={onChallenge}
-              startIcon={<Iconify icon="solar:stopwatch-bold-duotone" />}
+              onClick={onSecond}
+              startIcon={<Iconify icon={isEnabled('challenge') ? 'solar:stopwatch-bold-duotone' : 'solar:text-bold-duotone'} />}
               sx={{ color: 'common.white', borderColor: alpha('#fff', 0.48), '&:hover': { borderColor: '#fff', bgcolor: alpha('#fff', 0.08) } }}
             >
-              Thử thách 60 giây
+              {isEnabled('challenge') ? 'Thử thách 60 giây' : 'Bảng chữ cái'}
             </Button>
           </Stack>
         </Box>
         <FloatingLetters />
       </Stack>
-      <BrocadeStripe height={14} />
+      <BrocadeBand motif="diamond" height={18} />
     </Card>
   );
 }
@@ -237,3 +255,32 @@ function Recent({ sessions }: { sessions: ReturnType<typeof useProgress.getState
   );
 }
 
+
+// ----------------------------------------------------------------------
+
+function ComingSoon() {
+  const next = upcoming().slice(0, 2);
+  return (
+    <Card sx={{ p: 3, color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop('#E0A100', 0.08, 48) }}>
+      <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
+        <Iconify icon="solar:rocket-2-bold-duotone" width={22} sx={{ color: BROCADE.gold }} />
+        <Typography variant="subtitle2">Sắp ra mắt</Typography>
+      </Stack>
+      <Stack spacing={2}>
+        {next.map((r) => (
+          <Stack key={r.n} direction="row" spacing={1.5} alignItems="flex-start">
+            <CornerDiamond size={20} sx={{ mt: 0.25 }} />
+            <Box>
+              <Typography variant="subtitle2">
+                Đợt {r.n} · {r.name}
+              </Typography>
+              <Typography variant="caption" sx={{ opacity: 0.72 }}>
+                {r.pitch}
+              </Typography>
+            </Box>
+          </Stack>
+        ))}
+      </Stack>
+    </Card>
+  );
+}

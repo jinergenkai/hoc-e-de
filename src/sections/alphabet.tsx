@@ -17,6 +17,7 @@ import { graphemes } from 'src/utils/text';
 import { alphabet, ALPHABET_FACTS } from 'src/data/alphabet';
 
 import { Iconify } from 'src/components/iconify';
+import { CornerDiamond } from 'src/components/ornaments';
 import { RadeText, PageTitle, AudioButton, SampleDataChip } from 'src/components/common';
 
 const letterId = (l: Letter) => `l-${l.lower}`;
@@ -66,6 +67,7 @@ export function AlphabetPage() {
               onClick={() => setOpen(l)}
               sx={{
                 width: 1,
+                position: 'relative',
                 aspectRatio: '1',
                 borderRadius: 2,
                 flexDirection: 'column',
@@ -82,6 +84,7 @@ export function AlphabetPage() {
                   {l.lower}
                 </Box>
               </RadeText>
+              {l.special && <CornerDiamond size={16} sx={{ position: 'absolute', top: 8, right: 8 }} />}
               {l.special && (
                 <Typography variant="caption" sx={{ color: 'primary.main', fontWeight: 700, mt: 0.5 }}>
                   riêng Ê-đê

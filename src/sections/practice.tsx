@@ -16,6 +16,7 @@ import type { Lang, WordResult, SentenceResult } from 'src/utils/grader';
 import { gradeWord, gradeSentence } from 'src/utils/grader';
 import { words, sentences, topicById, wordsByTopic, sentencesByTopic } from 'src/data/vocab';
 import { useProgress } from 'src/store/progress';
+import { isEnabled, releaseOf } from 'src/config/release';
 
 import { Iconify } from 'src/components/iconify';
 import { RadeInput } from 'src/components/rade-input';
@@ -61,13 +62,24 @@ export function PracticeSetupPage() {
           <Choice active={kind === 'word'} onClick={() => setKind('word')} icon="solar:text-bold-duotone" title="Dịch từ" desc={`${ROUND} từ, chấm đúng / gần đúng / sai`} />
         </Grid>
         <Grid size={{ xs: 12, sm: 6 }}>
-          <Choice
-            active={kind === 'sentence'}
-            onClick={() => setKind('sentence')}
-            icon="solar:pen-new-square-bold-duotone"
-            title="Dịch câu"
-            desc="Chấm theo %, tô màu từng từ đúng / sai / thiếu"
-          />
+          {isEnabled('practiceSentence') ? (
+            <Choice
+              active={kind === 'sentence'}
+              onClick={() => setKind('sentence')}
+              icon="solar:pen-new-square-bold-duotone"
+              title="Dịch câu"
+              desc="Chấm theo %, tô màu từng từ đúng / sai / thiếu"
+            />
+          ) : (
+            <Choice
+              active={false}
+              locked
+              onClick={() => undefined}
+              icon="solar:lock-keyhole-bold-duotone"
+              title="Dịch câu"
+              desc={`Sắp ra mắt · Đợt ${releaseOf('practiceSentence')?.n}`}
+            />
+          )}
         </Grid>
       </Grid>
 
@@ -81,15 +93,16 @@ export function PracticeSetupPage() {
   );
 }
 
-function Choice({ active, onClick, icon, title, desc }: { active: boolean; onClick: () => void; icon: string; title: string; desc: string }) {
+function Choice({ active, locked, onClick, icon, title, desc }: { active: boolean; locked?: boolean; onClick: () => void; icon: string; title: string; desc: string }) {
   return (
     <Card
       sx={{
+        opacity: locked ? 0.6 : 1,
         outline: (t) => (active ? `2px solid ${t.palette.primary.main}` : 'none'),
         bgcolor: (t) => (active ? alpha(t.palette.primary.main, 0.04) : 'background.paper'),
       }}
     >
-      <CardActionArea onClick={onClick} sx={{ p: 3, display: 'flex', justifyContent: 'flex-start', gap: 2 }}>
+      <CardActionArea disabled={locked} onClick={onClick} sx={{ p: 3, display: 'flex', justifyContent: 'flex-start', gap: 2 }}>
         <Iconify icon={icon} width={40} sx={{ color: active ? 'primary.main' : 'text.disabled' }} />
         <Box>
           <Typography variant="h6">{title}</Typography>
@@ -135,7 +148,7 @@ export function PracticePlayPage() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const dir = (params.get('dir') as Dir) || 'rade-vi';
-  const kind = (params.get('kind') as Kind) || 'word';
+  const kind: Kind = params.get('kind') === 'sentence' && isEnabled('practiceSentence') ? 'sentence' : 'word';
   const { addXp, markCard, recordSession } = useProgress.getState();
 
   const [seed, setSeed] = useState(0);

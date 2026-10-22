@@ -1,7 +1,15 @@
-import { Navigate, createHashRouter, RouterProvider } from 'react-router-dom';
+import type { ReactNode } from 'react';
+import type { FeatureKey } from 'src/config/release';
+
+import { useState } from 'react';
+import { Outlet, Navigate, createHashRouter, RouterProvider } from 'react-router-dom';
+
+import Box from '@mui/material/Box';
 
 import { ThemeProvider } from 'src/theme';
+import { useProfiles } from 'src/store/profiles';
 import { DashboardLayout } from 'src/layouts/dashboard';
+import { EXPIRES, RELEASE, RELEASES, isExpired, isEnabled, IS_PREVIEW } from 'src/config/release';
 
 import { HomePage } from 'src/sections/home';
 import { AlphabetPage } from 'src/sections/alphabet';
@@ -10,23 +18,75 @@ import { DictionaryPage } from 'src/sections/dictionary';
 import { LearnPickPage, LearnDeckPage } from 'src/sections/learn';
 import { PracticePlayPage, PracticeSetupPage } from 'src/sections/practice';
 import { ChallengePickPage, ChallengePlayPage } from 'src/sections/challenge';
+import { ExpiredScreen, ProfilePickerPage, hasPickedThisSession } from 'src/sections/profiles';
+
+function Gate({ feature, children }: { feature: FeatureKey | FeatureKey[]; children: ReactNode }) {
+  const list = Array.isArray(feature) ? feature : [feature];
+  return list.some(isEnabled) ? children : <Navigate to="/" replace />;
+}
+
+function Root() {
+  const hasActive = useProfiles((s) => s.profiles.some((p) => p.id === s.activeId));
+  const [picked, setPicked] = useState(hasPickedThisSession);
+
+  if (EXPIRES && isExpired()) return <ExpiredScreen date={EXPIRES} />;
+  if (isEnabled('profiles') && (!picked || !hasActive)) return <ProfilePickerPage onDone={() => setPicked(true)} />;
+
+  return (
+    <>
+      <Outlet />
+      {IS_PREVIEW && <PreviewBadge />}
+    </>
+  );
+}
+
+function PreviewBadge() {
+  return (
+    <Box
+      sx={{
+        position: 'fixed',
+        right: 16,
+        bottom: 16,
+        zIndex: 2000,
+        px: 1.5,
+        py: 0.75,
+        borderRadius: 1,
+        typography: 'caption',
+        fontWeight: 700,
+        letterSpacing: 1,
+        color: '#fff',
+        bgcolor: 'rgba(28,37,46,.72)',
+        pointerEvents: 'none',
+      }}
+    >
+      BẢN XEM TRƯỚC · ĐỢT {RELEASE}/{RELEASES.length}
+      {EXPIRES && ` · HẠN ${new Date(EXPIRES).toLocaleDateString('vi-VN')}`}
+    </Box>
+  );
+}
 
 // Hash routing: the built app is loaded from file:// inside Electron.
 const router = createHashRouter([
   {
-    element: <DashboardLayout />,
+    element: <Root />,
     children: [
-      { path: '/', element: <HomePage /> },
-      { path: '/learn', element: <LearnPickPage /> },
-      { path: '/learn/:topicId', element: <LearnDeckPage /> },
-      { path: '/challenge', element: <ChallengePickPage /> },
-      { path: '/challenge/:topicId', element: <ChallengePlayPage /> },
-      { path: '/practice', element: <PracticeSetupPage /> },
-      { path: '/practice/:topicId', element: <PracticePlayPage /> },
-      { path: '/translate', element: <TranslatePage /> },
-      { path: '/alphabet', element: <AlphabetPage /> },
-      { path: '/dictionary', element: <DictionaryPage /> },
-      { path: '*', element: <Navigate to="/" replace /> },
+      { path: '/profiles', element: <Gate feature="profiles"><ProfilePickerPage /></Gate> },
+      {
+        element: <DashboardLayout />,
+        children: [
+          { path: '/', element: <HomePage /> },
+          { path: '/learn', element: <Gate feature="learn"><LearnPickPage /></Gate> },
+          { path: '/learn/:topicId', element: <Gate feature="learn"><LearnDeckPage /></Gate> },
+          { path: '/challenge', element: <Gate feature="challenge"><ChallengePickPage /></Gate> },
+          { path: '/challenge/:topicId', element: <Gate feature="challenge"><ChallengePlayPage /></Gate> },
+          { path: '/practice', element: <Gate feature="practiceWord"><PracticeSetupPage /></Gate> },
+          { path: '/practice/:topicId', element: <Gate feature="practiceWord"><PracticePlayPage /></Gate> },
+          { path: '/translate', element: <Gate feature="translate"><TranslatePage /></Gate> },
+          { path: '/alphabet', element: <Gate feature="alphabet"><AlphabetPage /></Gate> },
+          { path: '/dictionary', element: <Gate feature="dictionary"><DictionaryPage /></Gate> },
+          { path: '*', element: <Navigate to="/" replace /> },
+        ],
+      },
     ],
   },
 ]);

@@ -5,10 +5,27 @@ on:
     branches: [master]
     tags: ['v*']
   workflow_dispatch:
+    inputs:
+      release:
+        description: 'Đợt phát hành (1–6). Để trống = bản đầy đủ'
+        required: false
+        default: ''
+      preview:
+        description: 'Gắn nhãn "Bản xem trước"'
+        type: boolean
+        default: true
+      expires:
+        description: 'Bản xem trước hết hạn sau ngày (YYYY-MM-DD), để trống = không hết hạn'
+        required: false
+        default: ''
 
 jobs:
   build:
     runs-on: windows-latest
+    env:
+      VITE_RELEASE: ${{ inputs.release }}
+      VITE_PREVIEW: ${{ inputs.preview && '1' || '' }}
+      VITE_EXPIRES: ${{ inputs.expires }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -22,7 +39,7 @@ jobs:
           CSC_IDENTITY_AUTO_DISCOVERY: 'false'
       - uses: actions/upload-artifact@v4
         with:
-          name: HriamEde-windows
+          name: HriamEde-windows${{ inputs.release && format('-dot{0}', inputs.release) || '' }}
           path: |
             release/*.exe
           if-no-files-found: error

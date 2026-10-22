@@ -13,7 +13,7 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { alpha } from '@mui/material/styles';
 
 import { Iconify } from './iconify';
-import { BrocadeStripe } from './common';
+import { Gong, BrocadeBand } from './ornaments';
 
 /** Full-screen frame for learn / challenge / practice: close button, progress bar, score. */
 export function GameShell({
@@ -32,7 +32,7 @@ export function GameShell({
   const navigate = useNavigate();
   return (
     <Stack sx={{ minHeight: '100vh' }}>
-      <BrocadeStripe height={8} />
+      <BrocadeBand motif="sawtooth" height={12} />
       <Stack direction="row" alignItems="center" spacing={2} sx={{ px: 4, py: 2.5, maxWidth: 1100, width: 1, mx: 'auto' }}>
         <IconButton onClick={() => navigate(backTo)} title="Thoát (Esc)">
           <Iconify icon="solar:close-circle-linear" width={28} />
@@ -96,33 +96,40 @@ export function ResultCard({
 }) {
   return (
     <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 22 }}>
-      <Card sx={{ width: 560, maxWidth: '92vw', p: 5, textAlign: 'center' }}>
-        <Typography sx={{ fontSize: 64, lineHeight: 1 }}>{emoji}</Typography>
-        <Typography variant="h4" sx={{ mt: 2 }}>
-          {title}
-        </Typography>
-        <Typography variant="h1" sx={{ color: 'primary.main', my: 1 }}>
-          {score}
-        </Typography>
-        <Stack direction="row" justifyContent="center" spacing={4} sx={{ my: 3 }}>
-          {lines.map((l) => (
-            <Box key={l.label}>
-              <Typography variant="h5">{l.value}</Typography>
-              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                {l.label}
+      <Card sx={{ width: 560, maxWidth: '92vw', textAlign: 'center', overflow: 'hidden' }}>
+        <BrocadeBand motif="diamond" height={16} />
+        <Box sx={{ p: 5, pt: 4 }}>
+          <Typography sx={{ fontSize: 44, lineHeight: 1 }}>{emoji}</Typography>
+          <Typography variant="h4" sx={{ mt: 1.5, mb: 2 }}>
+            {title}
+          </Typography>
+          <motion.div initial={{ rotate: -8, scale: 0.6 }} animate={{ rotate: [-8, 6, -3, 0], scale: 1 }} transition={{ duration: 0.9 }} style={{ display: 'inline-block' }}>
+            <Gong size={176}>
+              <Typography variant="h3" sx={{ color: '#5F120B', lineHeight: 1.1, textShadow: '0 1px 0 rgba(255,255,255,.4)' }}>
+                {score}
               </Typography>
-            </Box>
-          ))}
-        </Stack>
-        {children}
-        <Stack direction="row" spacing={1.5} justifyContent="center" sx={{ mt: 3 }}>
-          <Button size="large" variant="outlined" color="inherit" onClick={onExit}>
-            Về chọn chủ đề
-          </Button>
-          <Button size="large" variant="contained" onClick={onAgain} startIcon={<Iconify icon="solar:refresh-bold" />}>
-            Chơi lại
-          </Button>
-        </Stack>
+            </Gong>
+          </motion.div>
+          <Stack direction="row" justifyContent="center" spacing={4} sx={{ my: 3 }}>
+            {lines.map((l) => (
+              <Box key={l.label}>
+                <Typography variant="h5">{l.value}</Typography>
+                <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                  {l.label}
+                </Typography>
+              </Box>
+            ))}
+          </Stack>
+          {children}
+          <Stack direction="row" spacing={1.5} justifyContent="center" sx={{ mt: 3 }}>
+            <Button size="large" variant="outlined" color="inherit" onClick={onExit}>
+              Về chọn chủ đề
+            </Button>
+            <Button size="large" variant="contained" onClick={onAgain} startIcon={<Iconify icon="solar:refresh-bold" />}>
+              Chơi lại
+            </Button>
+          </Stack>
+        </Box>
       </Card>
     </motion.div>
   );

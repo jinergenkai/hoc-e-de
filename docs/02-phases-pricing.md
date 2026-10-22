@@ -3,6 +3,8 @@
 > Bản 0.3 · 22/10/2026 · **Ngân sách khách chốt: 10 triệu.** Phạm vi rút gọn còn đúng 3 thứ khách cần: học thẻ quẹt có chấm điểm, luyện dịch có chấm điểm, "dịch thông minh" (tra từ điển, không phải AI), giao diện vui mắt, chạy offline trên Windows.
 > Các tính năng khác trong `01-requirements.md` / `04-feature-scope.md` là **định hướng mở rộng**, báo giá riêng khi khách cần.
 
+> Lịch công bố tính năng theo 6 đợt (bản xem trước có hạn dùng) và danh mục bán thêm: xem `06-releases-roadmap.md`.
+
 ## Tổng quan
 
 | Phase | Nội dung | Thời gian | Giá | Thanh toán |
