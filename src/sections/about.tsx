@@ -26,7 +26,7 @@ export function AboutPage() {
       <PageTitle title="Giới thiệu" subtitle="Thông tin sáng kiến và đơn vị triển khai" />
 
       <Box sx={{ mb: 4 }}>
-        <Card sx={{ overflow: 'hidden', borderBottomLeftRadius: 0, borderBottomRightRadius: 0, color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop('#E0A100', 0.08, 64) }}>
+        <Card sx={{ overflow: 'hidden', borderBottomLeftRadius: 0, borderBottomRightRadius: 0, color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop(BROCADE.cream, 0.08, 64) }}>
           <BrocadeBand motif="skirt" height={32} />
           <Stack direction={{ xs: 'column', md: 'row' }} alignItems="center" spacing={4} sx={{ p: { xs: 4, md: 5 } }}>
             <Gong size={150}>

@@ -15,7 +15,9 @@ import { words, sentences, topicById, wordsByTopic } from 'src/data/vocab';
 import { useProgress } from 'src/store/progress';
 
 import { Iconify } from 'src/components/iconify';
+import { isEnabled } from 'src/config/release';
 import { TopicGrid } from 'src/components/topic-grid';
+import { SpeakPractice } from 'src/components/recorder-ui';
 import { BROCADE, brocadeBackdrop } from 'src/components/ornaments';
 import { SwipeCard, type SwipeCardHandle } from 'src/components/swipe-card';
 import { GameShell, ScorePill, ResultCard } from 'src/components/game-shell';
@@ -250,7 +252,7 @@ function Ghost({ offset }: { offset: number }) {
         height: 340,
         borderRadius: 3,
         bgcolor: BROCADE.black,
-        ...brocadeBackdrop('#E0A100', 0.16, 40),
+        ...brocadeBackdrop(BROCADE.cream, 0.16, 40),
         boxShadow: (t) => t.customShadows.z8,
         transform: `translateY(${offset * 12}px) scale(${1 - offset * 0.04})`,
         opacity: 1 - offset * 0.25,
@@ -307,6 +309,11 @@ function Face({ word, mode, flipped, misses }: { word: Word; mode: Mode; flipped
               <Typography variant="body2" sx={{ px: 1.5, py: 0.75, borderRadius: 1, bgcolor: 'secondary.lighter', color: 'secondary.darker' }}>
                 {word.note}
               </Typography>
+            )}
+            {isEnabled('speak') && (
+              <Box sx={{ mt: 0.5 }}>
+                <SpeakPractice audioId={word.id} compact />
+              </Box>
             )}
             {example && (
               <Box sx={{ textAlign: 'center', mt: 1 }}>

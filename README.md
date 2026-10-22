@@ -21,7 +21,13 @@ Muốn build bản theo đợt (chỉ mở một phần tính năng, có nhãn x
 
 ## Thêm âm thanh
 
-Chép file vào `public/audio/`, đặt tên theo mã: `w001.mp3` (từ), `s001.mp3` (câu), `l-ƀ.mp3` (chữ cái). Lần build sau nút nghe tự hiện.
+Hai cách:
+- **Ghi ngay trong app:** menu **Ghi âm nội dung** (mã PIN mặc định `2468`, đổi bằng `VITE_ADMIN_PIN`). Bấm **Ghi liên tục**: Space = ghi/dừng, Enter = lưu & sang mục sau, R = ghi lại. Ghi âm lưu trên máy; **Xuất gói** ra file .zip để chép sang máy khác (**Nhập gói**) hoặc giải nén vào `public/audio/` để đóng gói vào bản cài.
+- **Chép file:** đặt vào `public/audio/`, tên theo mã: `w001.mp3` (từ), `s001.mp3` (câu), `l-ƀ.mp3` (chữ cái). Lần build sau nút nghe tự hiện.
+
+## Thêm ảnh Góc văn hoá
+
+Chép ảnh (jpg, png, webp) vào thư mục của từng mục: `public/culture/nha-dai/`, `mau-he/`, `cong-chieng/`, `tho-cam/`, `ghe-kpan/`, `ruou-can/`, `le-hoi/`. Ảnh xếp theo tên (`1.jpg`, `2.jpg`…), ảnh đầu tiên làm ảnh bìa. Nội dung chữ sửa ở `src/data/culture.ts`.
 
 ## Cấu trúc
 

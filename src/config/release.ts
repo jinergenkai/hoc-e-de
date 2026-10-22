@@ -14,7 +14,11 @@ export type FeatureKey =
   | 'dictionary'
   | 'practiceSentence'
   | 'translate'
-  | 'profiles';
+  | 'profiles'
+  | 'recording'
+  | 'speak'
+  | 'certificate'
+  | 'culture';
 
 export type Release = { n: number; name: string; pitch: string; features: FeatureKey[] };
 
@@ -25,6 +29,9 @@ export const RELEASES: Release[] = [
   { n: 4, name: 'Luyện dịch câu', pitch: 'Dịch cả câu, chấm theo %, tô màu từng từ, nhắc lỗi ngữ pháp', features: ['practiceSentence'] },
   { n: 5, name: 'Dịch thông minh', pitch: 'Dịch Việt ↔ Ê-đê ngay trên máy, phân tích từng từ', features: ['translate'] },
   { n: 6, name: 'Nhiều người học', pitch: 'Mỗi người một hồ sơ trên cùng máy, bảng xếp hạng', features: ['profiles'] },
+  { n: 7, name: 'Ghi âm & luyện nói', pitch: 'Người soạn ghi âm ngay trong app; người học ghi giọng mình và nghe lại so với giọng mẫu', features: ['recording', 'speak'] },
+  { n: 8, name: 'Chứng nhận hoàn thành', pitch: 'Giấy chứng nhận hoàn thành khoá, lưu PDF và in', features: ['certificate'] },
+  { n: 9, name: 'Góc văn hoá', pitch: 'Nhà dài, cồng chiêng, thổ cẩm, lễ hội… kèm ảnh và từ vựng liên quan', features: ['culture'] },
 ];
 
 const env = import.meta.env;

@@ -21,9 +21,11 @@ type ProgressState = {
   cards: Record<string, CardStat>;
   sessions: Session[];
   bestChallenge: number;
+  courseCompletedAt: string | null;
   addXp: (n: number) => void;
   markCard: (wordId: string, known: boolean) => void;
   recordSession: (s: Omit<Session, 'date'>) => void;
+  markCourseCompleted: () => void;
   reset: () => void;
 };
 
@@ -42,6 +44,7 @@ const initial = {
   cards: {} as Record<string, CardStat>,
   sessions: [] as Session[],
   bestChallenge: 0,
+  courseCompletedAt: null as string | null,
 };
 
 export const useProgress = create<ProgressState>()(
@@ -73,6 +76,7 @@ export const useProgress = create<ProgressState>()(
           sessions: [{ ...session, date: new Date().toISOString() }, ...s.sessions].slice(0, 200),
           bestChallenge: session.kind === 'challenge' ? Math.max(s.bestChallenge, session.score) : s.bestChallenge,
         })),
+      markCourseCompleted: () => set((s) => (s.courseCompletedAt ? s : { courseCompletedAt: new Date().toISOString() })),
       reset: () => set({ ...initial, today: dayKey() }),
     }),
     {

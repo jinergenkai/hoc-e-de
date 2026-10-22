@@ -30,6 +30,9 @@ export const NAV: { path: string; title: string; icon: string; feature?: Feature
   { path: '/translate', title: 'Dịch thông minh', icon: 'solar:magic-stick-3-bold-duotone', feature: 'translate' },
   { path: '/alphabet', title: 'Bảng chữ cái', icon: 'solar:text-bold-duotone', feature: 'alphabet' },
   { path: '/dictionary', title: 'Từ điển', icon: 'solar:book-bookmark-bold-duotone', feature: 'dictionary' },
+  { path: '/culture', title: 'Góc văn hoá', icon: 'solar:home-2-bold-duotone', feature: 'culture' },
+  { path: '/certificate', title: 'Chứng nhận', icon: 'solar:diploma-verified-bold-duotone', feature: 'certificate' },
+  { path: '/recording', title: 'Ghi âm nội dung', icon: 'solar:microphone-3-bold-duotone', feature: 'recording' },
   { path: '/about', title: 'Giới thiệu', icon: 'solar:info-circle-bold-duotone' },
 ];
 
@@ -87,7 +90,7 @@ function Nav() {
           </Box>
         </Stack>
 
-        <Stack component="ul" spacing={0.5} sx={{ px: 2, m: 0, listStyle: 'none', flexGrow: 1 }}>
+        <Stack component="ul" spacing={0.5} sx={{ px: 2, m: 0, listStyle: 'none', flexGrow: 1, minHeight: 0, overflowY: 'auto' }}>
           {items.map((item) => {
             const locked = Boolean(item.feature && !isEnabled(item.feature));
             return (
@@ -114,7 +117,7 @@ function Nav() {
         </Stack>
 
         {isEnabled('gamification') && (
-          <Box sx={{ m: 2, p: 2.5, borderRadius: 2, position: 'relative', overflow: 'hidden', color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop('#E0A100', 0.1, 40) }}>
+          <Box sx={{ m: 2, p: 2.5, borderRadius: 2, position: 'relative', overflow: 'hidden', color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop(BROCADE.cream, 0.1, 40) }}>
             <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
               <Iconify icon="solar:cup-star-bold-duotone" width={24} sx={{ color: BROCADE.yellow }} />
               <Typography variant="subtitle2">Mục tiêu hôm nay</Typography>

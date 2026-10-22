@@ -15,6 +15,7 @@ import { dayKey, levelOf, useProgress } from 'src/store/progress';
 import { isEnabled, upcoming, SHOW_TEASERS } from 'src/config/release';
 
 import { Iconify } from 'src/components/iconify';
+import { SpeakPractice } from 'src/components/recorder-ui';
 import { Leaderboard } from 'src/sections/profiles';
 import { Pompom, BROCADE, BrocadeBand, CornerDiamond, brocadeBackdrop } from 'src/components/ornaments';
 import { TopicGrid } from 'src/components/topic-grid';
@@ -79,7 +80,7 @@ function Hero({ onLearn, onSecond }: { onLearn: () => void; onSecond: () => void
       sx={{
         color: 'common.white',
         bgcolor: BROCADE.black,
-        ...brocadeBackdrop('#FFFFFF', 0.12, 72),
+        ...brocadeBackdrop(BROCADE.cream, 0.12, 72),
         overflow: 'hidden',
       }}
     >
@@ -216,6 +217,14 @@ function WordOfDay() {
           {word.note}
         </Typography>
       )}
+      {isEnabled('speak') && (
+        <Box sx={{ mt: 2 }}>
+          <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.75 }}>
+            Luyện nói: nghe mẫu, ghi giọng bạn rồi nghe lại
+          </Typography>
+          <SpeakPractice audioId={word.id} compact />
+        </Box>
+      )}
     </Card>
   );
 }
@@ -263,7 +272,7 @@ function Recent({ sessions }: { sessions: ReturnType<typeof useProgress.getState
 function ComingSoon() {
   const next = upcoming().slice(0, 2);
   return (
-    <Card sx={{ p: 3, color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop('#E0A100', 0.08, 48) }}>
+    <Card sx={{ p: 3, color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop(BROCADE.cream, 0.08, 48) }}>
       <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
         <Iconify icon="solar:rocket-2-bold-duotone" width={22} sx={{ color: BROCADE.yellow }} />
         <Typography variant="subtitle2">Sắp ra mắt</Typography>

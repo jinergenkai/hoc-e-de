@@ -13,6 +13,9 @@ import { EXPIRES, RELEASE, RELEASES, isExpired, isEnabled, IS_PREVIEW } from 'sr
 
 import { HomePage } from 'src/sections/home';
 import { AboutPage } from 'src/sections/about';
+import { CulturePage } from 'src/sections/culture';
+import { CertificatePage } from 'src/sections/certificate';
+import { RecordingStudioPage } from 'src/sections/recording-studio';
 import { AlphabetPage } from 'src/sections/alphabet';
 import { TranslatePage } from 'src/sections/translate';
 import { DictionaryPage } from 'src/sections/dictionary';
@@ -85,6 +88,9 @@ const router = createHashRouter([
           { path: '/translate', element: <Gate feature="translate"><TranslatePage /></Gate> },
           { path: '/alphabet', element: <Gate feature="alphabet"><AlphabetPage /></Gate> },
           { path: '/dictionary', element: <Gate feature="dictionary"><DictionaryPage /></Gate> },
+          { path: '/culture', element: <Gate feature="culture"><CulturePage /></Gate> },
+          { path: '/certificate', element: <Gate feature="certificate"><CertificatePage /></Gate> },
+          { path: '/recording', element: <Gate feature="recording"><RecordingStudioPage /></Gate> },
           { path: '/about', element: <AboutPage /> },
           { path: '*', element: <Navigate to="/" replace /> },
         ],

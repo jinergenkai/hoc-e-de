@@ -14,8 +14,8 @@
     "electron": "electron .",
     "electron:dev": "ELECTRON_DEV_URL=http://localhost:5173 electron .",
     "dist:win": "npm run build && electron-builder --win nsis portable --publish never",
-    "prebuild": "node scripts/audio-manifest.mjs && node scripts/icons-subset.mjs",
-    "predev": "node scripts/audio-manifest.mjs && node scripts/icons-subset.mjs"
+    "prebuild": "node scripts/audio-manifest.mjs && node scripts/culture-manifest.mjs && node scripts/icons-subset.mjs",
+    "predev": "node scripts/audio-manifest.mjs && node scripts/culture-manifest.mjs && node scripts/icons-subset.mjs"
   },
   "build": {
     "appId": "vn.hriamede.app",
@@ -62,6 +62,7 @@
     "canvas-confetti": "^1.9.4",
     "electron": "^45.0.0",
     "electron-builder": "^26.15.3",
+    "fflate": "^0.8.3",
     "framer-motion": "^12.43.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",

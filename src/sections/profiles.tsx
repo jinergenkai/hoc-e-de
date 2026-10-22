@@ -84,7 +84,7 @@ export function ProfilePickerPage({ onDone }: { onDone?: () => void }) {
     <Stack
       alignItems="center"
       justifyContent="center"
-      sx={{ minHeight: '100vh', color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop('#E0A100', 0.07, 72), position: 'relative' }}
+      sx={{ minHeight: '100vh', color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop(BROCADE.cream, 0.07, 72), position: 'relative' }}
     >
       <BrocadeBand motif="skirt" height={40} sx={{ position: 'absolute', top: 0 }} />
       <Typography variant="overline" sx={{ color: BROCADE.gold, letterSpacing: 3 }}>
@@ -308,7 +308,7 @@ export function Leaderboard() {
 
 export function ExpiredScreen({ date }: { date: string }) {
   return (
-    <Stack alignItems="center" justifyContent="center" spacing={2} sx={{ minHeight: '100vh', textAlign: 'center', color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop('#E0A100', 0.06, 72), px: 4 }}>
+    <Stack alignItems="center" justifyContent="center" spacing={2} sx={{ minHeight: '100vh', textAlign: 'center', color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop(BROCADE.cream, 0.06, 72), px: 4 }}>
       <Iconify icon="solar:lock-keyhole-bold-duotone" width={72} sx={{ color: BROCADE.gold }} />
       <Typography variant="h3">Bản xem trước đã hết hạn</Typography>
       <Typography sx={{ opacity: 0.8, maxWidth: 520 }}>

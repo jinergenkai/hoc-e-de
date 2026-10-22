@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { TypographyProps } from '@mui/material/Typography';
 
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import confetti from 'canvas-confetti';
 
 import Box from '@mui/material/Box';
@@ -14,6 +14,7 @@ import { alpha } from '@mui/material/styles';
 
 import audioManifest from 'src/data/audio-manifest.json';
 import { SAMPLE_DATA_NOTICE } from 'src/data/vocab';
+import { useRecordings, recordingUrl } from 'src/store/recordings';
 
 import { Iconify } from './iconify';
 import { BrocadeBand, CornerDiamond } from './ornaments';
@@ -32,16 +33,36 @@ export function RadeText({ children, ...other }: TypographyProps) {
 
 const audioFiles = audioManifest as Record<string, string>;
 
-export function hasAudio(id: string) {
-  return Boolean(audioFiles[id]);
+/** Bundled file (public/audio) or an in-app recording. */
+export function useHasAudio(id: string) {
+  const recorded = useRecordings((st) => st.ids.has(id));
+  return recorded || Boolean(audioFiles[id]);
+}
+
+/** Plays the in-app recording if there is one, otherwise the bundled file. */
+export async function playAudio(id: string, onEnd?: () => void): Promise<boolean> {
+  const url = useRecordings.getState().ids.has(id) ? await recordingUrl(id) : audioFiles[id] ? `./audio/${audioFiles[id]}` : null;
+  if (!url) return false;
+  const audio = new Audio(url);
+  const finish = () => {
+    if (url.startsWith('blob:')) URL.revokeObjectURL(url);
+    onEnd?.();
+  };
+  audio.onended = finish;
+  try {
+    await audio.play();
+    return true;
+  } catch {
+    finish();
+    return false;
+  }
 }
 
 export function AudioButton({ id, size = 44 }: { id: string; size?: number }) {
-  const ref = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
-  const file = audioFiles[id];
+  const available = useHasAudio(id);
 
-  if (!file) {
+  if (!available) {
     return (
       <Tooltip title="Âm thanh sẽ được bổ sung" arrow>
         <span>
@@ -55,16 +76,14 @@ export function AudioButton({ id, size = 44 }: { id: string; size?: number }) {
 
   const play = (e: React.MouseEvent) => {
     e.stopPropagation();
-    ref.current ??= new Audio(`./audio/${file}`);
-    ref.current.currentTime = 0;
-    ref.current.onended = () => setPlaying(false);
     setPlaying(true);
-    ref.current.play().catch(() => setPlaying(false));
+    playAudio(id, () => setPlaying(false)).then((ok) => !ok && setPlaying(false));
   };
 
   return (
     <IconButton
       onClick={play}
+      onPointerDown={(e) => e.stopPropagation()}
       color="primary"
       sx={{
         width: size,
@@ -107,7 +126,7 @@ export function SampleDataChip() {
 export function PageTitle({ title, subtitle, action }: { title: string; subtitle?: ReactNode; action?: ReactNode }) {
   return (
     <Stack direction="row" alignItems="flex-end" justifyContent="space-between" spacing={2} sx={{ mb: 4 }}>
-      <Box>
+      <Box sx={{ minWidth: 0 }}>
         <Stack direction="row" alignItems="center" spacing={1.25}>
           <CornerDiamond size={22} />
           <Typography variant="h4">{title}</Typography>
@@ -119,7 +138,7 @@ export function PageTitle({ title, subtitle, action }: { title: string; subtitle
         )}
         <BrocadeBand motif="sleeve" height={9} sx={{ width: 96, mt: 1.5, borderRadius: 0.5, overflow: 'hidden' }} />
       </Box>
-      {action}
+      {action && <Box sx={{ flexShrink: 0, whiteSpace: 'nowrap' }}>{action}</Box>}
     </Stack>
   );
 }
