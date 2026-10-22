@@ -20,7 +20,7 @@ import { levelOf, useProgress, switchProgressTo } from 'src/store/progress';
 import { useProfiles, AVATAR_COLORS, AVATAR_EMOJIS, readProfileStats } from 'src/store/profiles';
 
 import { Iconify } from 'src/components/iconify';
-import { BROCADE, BrocadeBand, brocadeBackdrop } from 'src/components/ornaments';
+import { Fringe, BROCADE, BrocadeBand, brocadeBackdrop } from 'src/components/ornaments';
 
 // The picker shows once per app launch, so each learner on a shared PC picks themself.
 const PICKED_FLAG = 'hriam-ede-picked';
@@ -86,7 +86,7 @@ export function ProfilePickerPage({ onDone }: { onDone?: () => void }) {
       justifyContent="center"
       sx={{ minHeight: '100vh', color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop(BROCADE.gold, 0.07, 72), position: 'relative' }}
     >
-      <BrocadeBand motif="diamond" height={18} edges sx={{ position: 'absolute', top: 0 }} />
+      <BrocadeBand motif="skirt" height={40} sx={{ position: 'absolute', top: 0 }} />
       <Typography variant="overline" sx={{ color: BROCADE.gold, letterSpacing: 3 }}>
         Hriăm Êđê
       </Typography>
@@ -166,7 +166,10 @@ export function ProfilePickerPage({ onDone }: { onDone?: () => void }) {
           pick(p);
         }}
       />
-      <BrocadeBand motif="sawtooth" height={14} edges sx={{ position: 'absolute', bottom: 0 }} />
+      <Box sx={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+        <BrocadeBand motif="skirt" height={40} />
+        <Fringe height={24} />
+      </Box>
     </Stack>
   );
 }
@@ -187,7 +190,7 @@ function AddProfileDialog({ open, onClose, onCreated }: { open: boolean; onClose
 
   return (
     <Dialog open={open} onClose={count ? onClose : undefined} maxWidth="xs" fullWidth>
-      <BrocadeBand motif="diamond" height={12} edges />
+      <BrocadeBand motif="sleeve" height={14} />
       <Box sx={{ p: 4 }}>
         <Stack alignItems="center" spacing={2} sx={{ mb: 3 }}>
           <ProfileAvatar profile={{ emoji, color }} size={96} />
@@ -262,7 +265,7 @@ export function Leaderboard() {
 
   return (
     <Card sx={{ overflow: 'hidden' }}>
-      <BrocadeBand motif="zigzag" height={10} />
+      <BrocadeBand motif="sleeve" height={12} />
       <Box sx={{ p: 3 }}>
         <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2, color: 'secondary.dark' }}>
           <Iconify icon="solar:ranking-bold-duotone" width={22} />

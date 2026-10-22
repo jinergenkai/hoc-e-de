@@ -83,7 +83,7 @@ export const SwipeCard = forwardRef<SwipeCardHandle, Props>(function SwipeCard(
           overflow: 'hidden',
         }}
       >
-        <BrocadeBand motif="sawtooth" height={10} sx={{ position: 'absolute', top: 0, left: 0 }} />
+        <BrocadeBand motif="sleeve" height={12} sx={{ position: 'absolute', top: 0, left: 0 }} />
         <CornerDiamond size={18} sx={{ position: 'absolute', left: 14, bottom: 14, opacity: 0.85 }} />
         <CornerDiamond size={18} sx={{ position: 'absolute', right: 14, bottom: 14, opacity: 0.85 }} />
         {children}

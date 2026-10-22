@@ -42,7 +42,7 @@ export function CulturePage() {
                 <Card sx={{ overflow: 'hidden', transition: 'transform .2s', '&:hover': { transform: 'translateY(-4px)' } }}>
                   <CardActionArea onClick={() => setOpen(item)}>
                     <Cover item={item} src={pics[0]} height={180} />
-                    <BrocadeBand motif="sawtooth" height={10} />
+                    <BrocadeBand motif="sleeve" height={12} />
                     <Box sx={{ p: 2.5 }}>
                       <Typography variant="h6">{item.title}</Typography>
                       <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5, minHeight: 44 }}>
@@ -117,7 +117,7 @@ function Detail({ item, onClose }: { item: CultureItem; onClose: () => void }) {
           ))}
         </Stack>
       )}
-      <BrocadeBand motif="diamond" height={16} edges />
+      <BrocadeBand motif="skirt" height={28} />
 
       <Box sx={{ p: 4 }}>
         <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 2 }}>

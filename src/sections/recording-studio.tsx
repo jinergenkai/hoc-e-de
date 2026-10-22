@@ -56,7 +56,7 @@ function PinGate({ onUnlock }: { onUnlock: () => void }) {
   return (
     <Stack alignItems="center" sx={{ pt: 8 }}>
       <Card sx={{ width: 380, overflow: 'hidden' }}>
-        <BrocadeBand motif="sawtooth" height={12} />
+        <BrocadeBand motif="sleeve" height={14} />
         <Stack spacing={2} alignItems="center" sx={{ p: 4 }}>
           <Iconify icon="solar:lock-keyhole-bold-duotone" width={48} sx={{ color: 'primary.main' }} />
           <Typography variant="h6">Khu vực người soạn nội dung</Typography>
@@ -315,7 +315,7 @@ function StudioSession({ list, start, onClose }: { list: Item[]; start: number; 
 
   return (
     <Box>
-      <BrocadeBand motif="diamond" height={16} edges />
+      <BrocadeBand motif="skirt" height={28} />
       <Stack direction="row" alignItems="center" sx={{ px: 3, pt: 2 }}>
         <Typography variant="subtitle2" sx={{ color: 'text.secondary', flexGrow: 1 }}>
           {index + 1}/{list.length} · đã lưu {saved}

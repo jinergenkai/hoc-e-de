@@ -26,7 +26,7 @@ export const BROCADE = {
   white: '#F4EFE6',
 };
 
-export type Motif = 'diamond' | 'sawtooth' | 'zigzag' | 'skirt' | 'sleeve' | 'pinstripe' | 'khoPanel';
+export type Motif = 'skirt' | 'sleeve' | 'pinstripe' | 'khoPanel';
 
 type Tile = { url: string; w: number; h: number };
 
@@ -39,22 +39,6 @@ const c = BROCADE;
 
 /** Repeating tiles. skirt / sleeve / pinstripe repeat horizontally, khoPanel vertically. */
 export const TILES: Record<Motif, Tile> = {
-  // First-version bands (black ground, red / gold motifs) — the main look of the app
-  diamond: {
-    w: 32,
-    h: 16,
-    url: svg(32, 16, `<rect width='32' height='16' fill='${c.black}'/><path d='M0 8 8 0 16 8 8 16Z' fill='${c.red}'/><path d='M16 8 24 0 32 8 24 16Z' fill='${c.gold}'/><path d='M5 8 8 5 11 8 8 11Z' fill='${c.white}'/><path d='M21 8 24 5 27 8 24 11Z' fill='${c.black}'/>`),
-  },
-  sawtooth: {
-    w: 32,
-    h: 16,
-    url: svg(32, 16, `<rect width='32' height='16' fill='${c.black}'/><path d='M0 16 8 6 16 16Z M16 16 24 6 32 16Z' fill='${c.red}'/><path d='M0 0 8 10 16 0Z M16 0 24 10 32 0Z' fill='${c.gold}' opacity='.9'/><path d='M6 13 8 10.5 10 13Z M22 13 24 10.5 26 13Z' fill='${c.white}'/>`),
-  },
-  zigzag: {
-    w: 32,
-    h: 16,
-    url: svg(32, 16, `<rect width='32' height='16' fill='${c.black}'/><path d='M0 11 8 4 16 11 24 4 32 11' fill='none' stroke='${c.red}' stroke-width='3'/><path d='M0 15 8 8 16 15 24 8 32 15' fill='none' stroke='${c.gold}' stroke-width='1.5'/><circle cx='8' cy='12' r='1.2' fill='${c.white}'/><circle cx='24' cy='12' r='1.2' fill='${c.white}'/>`),
-  },
   // Skirt band: stripe group · red band with cream diamond chain · mirrored stripe group
   skirt: {
     w: 24,
@@ -138,25 +122,23 @@ export const TILES: Record<Motif, Tile> = {
 
 // ----------------------------------------------------------------------
 
-type BandProps = { motif?: Motif; height?: number; edges?: boolean; sx?: SxProps<Theme> };
+type BandProps = { motif?: Motif; height?: number; sx?: SxProps<Theme> };
 
-/** Horizontal woven band; `edges` adds thin red lines above and below. */
-export function BrocadeBand({ motif = 'diamond', height = 16, edges = false, sx }: BandProps) {
+/** Horizontal woven band. */
+export function BrocadeBand({ motif = 'skirt', height = 28, sx }: BandProps) {
   const t = TILES[motif];
-  const edge = edges ? <Box sx={{ height: Math.max(2, height / 6), bgcolor: c.red }} /> : null;
   return (
-    <Box sx={{ width: 1, flexShrink: 0, ...(sx as object) }}>
-      {edge}
-      <Box
-        sx={{
-          height,
-          backgroundImage: t.url,
-          backgroundRepeat: 'repeat-x',
-          backgroundSize: `${(t.w * height) / t.h}px ${height}px`,
-        }}
-      />
-      {edge}
-    </Box>
+    <Box
+      sx={{
+        width: 1,
+        height,
+        flexShrink: 0,
+        backgroundImage: t.url,
+        backgroundRepeat: 'repeat-x',
+        backgroundSize: `${(t.w * height) / t.h}px ${height}px`,
+        ...(sx as object),
+      }}
+    />
   );
 }
 

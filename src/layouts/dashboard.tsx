@@ -77,7 +77,7 @@ function Nav() {
   return (
     <Box component="nav" sx={{ width: NAV_WIDTH, flexShrink: 0, position: 'sticky', top: 0, height: '100vh', display: 'flex', bgcolor: 'background.paper', borderRight: (t) => `1px dashed ${alpha(t.palette.grey[500], 0.24)}` }}>
       <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        <BrocadeBand motif="diamond" height={14} edges />
+        <BrocadeBand motif="skirt" height={30} />
         <Stack direction="row" alignItems="center" spacing={1.5} sx={{ px: 3, py: 3 }}>
           <Logo />
           <Box>
@@ -128,7 +128,7 @@ function Nav() {
             <LinearProgress variant="determinate" value={pct} color="secondary" sx={{ bgcolor: alpha(BROCADE.white, 0.16) }} />
           </Box>
         )}
-        <BrocadeBand motif="sawtooth" height={12} />
+        <BrocadeBand motif="sleeve" height={14} />
       </Box>
     </Box>
   );

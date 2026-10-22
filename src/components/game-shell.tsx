@@ -32,7 +32,7 @@ export function GameShell({
   const navigate = useNavigate();
   return (
     <Stack sx={{ minHeight: '100vh' }}>
-      <BrocadeBand motif="sawtooth" height={12} />
+      <BrocadeBand motif="sleeve" height={14} />
       <Stack direction="row" alignItems="center" spacing={2} sx={{ px: 4, py: 2.5, maxWidth: 1100, width: 1, mx: 'auto' }}>
         <IconButton onClick={() => navigate(backTo)} title="Thoát (Esc)">
           <Iconify icon="solar:close-circle-linear" width={28} />
@@ -97,7 +97,7 @@ export function ResultCard({
   return (
     <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 22 }}>
       <Card sx={{ width: 560, maxWidth: '92vw', textAlign: 'center', overflow: 'hidden' }}>
-        <BrocadeBand motif="diamond" height={16} edges />
+        <BrocadeBand motif="skirt" height={30} />
         <Box sx={{ p: 5, pt: 4 }}>
           <Typography sx={{ fontSize: 44, lineHeight: 1 }}>{emoji}</Typography>
           <Typography variant="h4" sx={{ mt: 1.5, mb: 2 }}>
