@@ -1,110 +1,89 @@
 # Lộ trình triển khai & báo giá theo Phase
 
-> Đơn giá tham khảo thị trường freelance/agency nhỏ tại Việt Nam (2026), 1 dev full-stack + 0.3 designer. Điều chỉnh theo năng lực và quan hệ với khách.
-> Mỗi phase là **một hợp đồng/biên bản nghiệm thu riêng** → khách có thể dừng sau bất kỳ phase nào mà vẫn có sản phẩm chạy được.
+> Bản 0.2 — ứng dụng máy tính Electron, offline. Đơn giá tham khảo thị trường freelance Việt Nam 2026, 1 dev + 0.3 designer.
+> Mỗi phase là **một biên bản nghiệm thu riêng**, khách dừng ở phase nào cũng có phần mềm chạy được.
 
 ## Tổng quan
 
-| Phase | Tên | Thời gian | Báo giá (VNĐ) | Kết quả demo cho khách |
+| Phase | Tên | Thời gian | Báo giá (VNĐ) | Khách nhận được |
 |---|---|---|---|---|
-| 0 | Khảo sát + Prototype UI | 1 tuần | 6 – 8 triệu | Link Vercel chạy được, bấm thử các màn hình với dữ liệu mẫu |
-| 1 | MVP **Học** | 3 tuần | 22 – 30 triệu | Từ vựng, phát âm, bảng chữ/vần, tra từ, admin nhập CSV |
-| 2 | **Luyện tập** + chấm điểm | 2.5 tuần | 18 – 25 triệu | 7 dạng bài, màn kết quả, lưu điểm trên máy |
-| 3 | **Tài khoản** + tiến độ | 2 tuần | 15 – 20 triệu | Đăng nhập Google, đồng bộ tiến độ, streak, SRS, huy hiệu |
-| 4 | **Trợ lý AI** | 2 tuần | 18 – 25 triệu | Chat hỏi đáp có nguồn, chấm dịch câu bằng AI |
-| 5 | Hoàn thiện (tuỳ chọn) | 1.5 tuần | 10 – 15 triệu | PWA offline, thống kê admin, ghi âm trong CMS, ngữ pháp |
-| | **Tổng** | **~12 tuần** | **89 – 123 triệu** | |
+| 0 | Prototype | 1 tuần | 6 – 8 triệu | File `.exe` chạy thử: màn chính, học thẻ quẹt với 30–50 từ mẫu, 1 bài dịch từ có chấm điểm |
+| 1 | **Học** | 3 tuần | 22 – 28 triệu | Thẻ quẹt hoàn chỉnh, chi tiết từ, ghi âm, bảng chữ cái/vần, tra từ, nhập nội dung từ Excel |
+| 2 | **Luyện tập & chấm điểm** + hồ sơ | 3 tuần | 24 – 30 triệu | Dịch từ/câu 2 chiều có chấm, 5 dạng bài khác, bài kiểm tra, nhiều hồ sơ trên máy, tiến độ, huy hiệu, ôn tập |
+| 3 | Phân phối & quản trị | 1.5 tuần | 10 – 14 triệu | Bộ cài chính thức + bản portable, gói nội dung qua USB, sửa từ trong app, xuất điểm Excel, sao lưu |
+| | **Tổng gói chính (0–3)** | **~8.5 tuần** | **62 – 80 triệu** | |
+| 4 | AI khi có mạng (tuỳ chọn) | 2 tuần | 15 – 20 triệu | Chấm dịch theo nghĩa, hỏi đáp tra cứu |
+| 5 | Tuỳ chọn khác | báo giá riêng | | Bản macOS, tự động cập nhật qua mạng, mẫu câu giao tiếp, bản web/điện thoại dùng lại code |
 
-**Điều khoản thanh toán đề xuất cho mỗi phase:** tạm ứng 40% khi ký → 60% khi nghiệm thu (demo trên link Vercel + checklist bên dưới). Phase sau chỉ bắt đầu khi phase trước đã thanh toán đủ.
+**Thanh toán mỗi phase:** tạm ứng 40% khi ký → 60% khi nghiệm thu. Phase sau chỉ bắt đầu khi phase trước thanh toán đủ.
 
-**Chi phí vận hành (khách tự trả, ngoài báo giá):**
+**Chi phí khác (khách tự trả, ngoài báo giá):**
 
-| Hạng mục | Free | Khi lớn lên |
+| Hạng mục | Bắt buộc? | Ước tính |
 |---|---|---|
-| Vercel hosting | Hobby 0đ (chỉ phi thương mại) | Pro ~20 USD/tháng |
-| Vercel Blob | Gói free của Vercel (kiểm tra hạn mức hiện hành khi deploy) | Trả theo dung lượng/băng thông |
-| DB người dùng (Phase 3) | Neon Postgres free qua Vercel Marketplace | Nâng gói khi > vài nghìn user |
-| Claude API (Phase 4) | — | Ước tính vài trăm nghìn đến 1–2 triệu/tháng cho vài trăm người dùng tích cực với Haiku; đặt trần chi tiêu |
-| Tên miền .vn / .com | — | ~300k – 800k/năm |
+| Hosting / máy chủ | Không cần (app offline) | 0đ |
+| Chứng thư ký số code-signing (bỏ cảnh báo Windows) | Khuyến nghị nếu phát cho nhiều trường/cơ quan | ~5 – 10 triệu/năm |
+| Claude API + máy chủ trung gian (chỉ Phase 4) | Không | vài trăm nghìn – 1 triệu/tháng tuỳ lượng dùng; đặt trần chi tiêu |
 
-**Bảo trì sau bàn giao (tuỳ chọn):** 2 – 4 triệu/tháng (sửa lỗi, cập nhật thư viện, nhập nội dung hộ ≤ 2 giờ/tháng).
+**Bảo trì sau bàn giao (tuỳ chọn):** 2 – 3 triệu/tháng (sửa lỗi, đóng gói nội dung mới ≤ 2 lần/tháng).
+
+**So với phương án web cũ:** bỏ hosting/đăng nhập online → rẻ hơn ~25 triệu và không tốn phí hàng tháng; đổi lại không đồng bộ giữa các máy, cập nhật nội dung phải chép file.
 
 ---
 
-## Phase 0 — Khảo sát & Prototype UI (1 tuần)
+## Phase 0 — Prototype (1 tuần)
 
-Mục tiêu: chốt giao diện và cảm nhận sản phẩm trước khi tốn tiền làm thật. **Đây là phase dùng để demo bán hàng.**
+- [ ] Chốt danh sách chủ đề, mẫu Excel nội dung, bảng chữ cái chuẩn, công thức điểm
+- [ ] Khung Electron + React + MUI + theme Minimal (màu thổ cẩm)
+- [ ] Màn chính, danh sách chủ đề, **học thẻ quẹt** đúng mô tả của khách (quẹt qua = thuộc, chưa thuộc = trộn lại)
+- [ ] 1 bài **dịch từ Việt ↔ Ê đê có chấm điểm** chạy thật
+- [ ] Thử font, thanh phím Ê đê, gõ cùng Unikey trên máy Windows thật
+- [ ] Xuất file `.exe` gửi khách
 
-- [ ] Workshop 1 buổi chốt danh sách chủ đề, mẫu Google Sheet nội dung, bảng chữ cái chuẩn
-- [ ] Khởi tạo Next.js + MUI + theme Minimal (màu thương hiệu Ê đê, xem `03-design-system.md`)
-- [ ] Layout mobile: bottom nav (Học · Luyện tập · Tra từ · Tôi), desktop: sidebar
-- [ ] Màn hình tĩnh với 30–50 từ mẫu: Trang chủ, Chủ đề, Thẻ từ, Bảng chữ cái, 1 bài Match chạy thật
-- [ ] Test font + bàn phím ảo trên iPhone và Android
-- [ ] Deploy Vercel, gửi link
+**Nghiệm thu:** khách cài trên máy mình, bấm thử, duyệt giao diện bằng văn bản/tin nhắn.
 
-**Nghiệm thu:** link chạy trên điện thoại khách; khách duyệt màu sắc/bố cục bằng văn bản.
+## Phase 1 — Học (3 tuần)
 
-## Phase 1 — MVP Học (3 tuần)
+- [ ] L-01 → L-07 (xem `01-requirements.md`)
+- [ ] Trình phát ghi âm, nút nghe chậm
+- [ ] Tra từ 2 chiều, không dấu, gợi ý gần đúng
+- [ ] Chế độ quản trị: nhập Excel từ vựng/câu/đáp án chấp nhận, nhập thư mục ghi âm (C-01 → C-03)
+- [ ] Phím tắt toàn app
 
-- [ ] L-01 → L-07, L-10 (bookmark lưu trên máy)
-- [ ] Đọc nội dung từ Vercel Blob, render tĩnh + ISR, URL SEO `/tu-dien/[slug]`
-- [ ] Trình phát audio dùng chung, cache, tải lười
-- [ ] Tìm kiếm 2 chiều, không dấu, gợi ý khi gõ (tìm phía client trên `search-index.json`)
-- [ ] Admin `/admin` (đăng nhập bằng mật khẩu/biến môi trường): C-01, C-02, C-04
-- [ ] Trang Giới thiệu, Liên hệ, Chính sách quyền riêng tư
+**Nghiệm thu:** khách tự nhập ≥ 300 từ qua Excel và học được bằng thẻ quẹt trên máy không có mạng.
 
-**Nghiệm thu:** khách tự nhập ≥ 300 từ qua CSV, thấy hiển thị trên site; Lighthouse mobile ≥ 90.
+## Phase 2 — Luyện tập & chấm điểm (3 tuần)
 
-## Phase 2 — Luyện tập & chấm điểm (2.5 tuần)
+- [ ] Bộ sinh câu hỏi + **bộ chấm điểm offline** (đúng / gần đúng / sai, tô màu từng từ cho dịch câu), có unit test
+- [ ] P-01 → P-07
+- [ ] Nút "Tôi đúng mà" lưu đề xuất đáp án
+- [ ] Hồ sơ nhiều người trên 1 máy, tiến độ, biểu đồ điểm, chuỗi ngày, huy hiệu, ôn tập ngắt quãng, xếp hạng trong máy (U-01 → U-05)
 
-- [ ] Bộ máy sinh câu hỏi từ kho từ vựng theo chủ đề + chiều dịch
-- [ ] P-01 → P-07 (P-07 chấm theo đáp án chấp nhận + độ tương đồng)
-- [ ] Bàn phím ảo Ê đê cho mọi ô nhập
-- [ ] So khớp mềm: NFC, hoa/thường, dấu câu, tuỳ chọn bỏ qua breve
-- [ ] Màn kết quả + "Luyện lại câu sai"; lịch sử điểm lưu localStorage
-- [ ] Hiệu ứng đúng/sai, rung nhẹ trên mobile, âm báo (tắt được)
+**Nghiệm thu:** mỗi dạng bài chạy với ≥ 3 chủ đề; bộ 50 câu chấm mẫu do khách soạn cho kết quả khớp mong đợi ≥ 90%.
 
-**Nghiệm thu:** mỗi dạng bài chạy với ≥ 3 chủ đề; checklist test trên 2 điện thoại thật.
+## Phase 3 — Phân phối & quản trị (1.5 tuần)
 
-## Phase 3 — Tài khoản & tiến độ (2 tuần)
+- [ ] Bộ cài `.exe` chính thức (biểu tượng, tên, gỡ cài đặt) + bản portable
+- [ ] Ký số nếu khách có chứng thư
+- [ ] Gói nội dung `.ede`: xuất từ máy người soạn, nhập trên máy khác (C-05)
+- [ ] Sửa/xoá từng từ trong app (C-04), duyệt đề xuất "Tôi đúng mà" (C-06)
+- [ ] Xuất kết quả học ra Excel (U-06), sao lưu/khôi phục tiến độ (U-07)
+- [ ] Tài liệu hướng dẫn cài đặt + quản trị, 1 buổi hướng dẫn online
 
-- [ ] Đăng nhập Google (Auth.js), gộp tiến độ khách vãng lai khi đăng nhập
-- [ ] A-03 → A-05, P-08 (SRS), P-09 (kiểm tra cuối chủ đề + huy hiệu)
-- [ ] Đồng bộ bookmark, lịch sử bài làm
-- [ ] Xoá tài khoản, xuất dữ liệu của tôi
-- [ ] Admin: danh sách người dùng, C-03 sửa từng mục từ
+**Nghiệm thu:** cài sạch trên 2 máy Windows khác nhau; chuyển nội dung mới từ máy A sang máy B bằng USB thành công.
 
-**Quyết định cần khách chọn trước khi bắt đầu Phase 3:**
+## Phase 4 — AI khi có mạng (tuỳ chọn, 2 tuần)
 
-| Phương án | Ưu | Nhược |
-|---|---|---|
-| **A. Chỉ Vercel Blob** (mỗi user 1 file `users/{id}.json`) | Đúng yêu cầu "chỉ dùng Blob", 0 thêm dịch vụ | Không có bảng xếp hạng, không thống kê tổng hợp, rủi ro ghi đè khi học trên 2 máy cùng lúc |
-| **B. Blob cho nội dung + Neon Postgres free cho user** (khuyến nghị) | Bảng xếp hạng, thống kê, an toàn dữ liệu; vẫn free và quản lý ngay trong Vercel | Thêm 1 dịch vụ |
-
-## Phase 4 — Trợ lý AI (2 tuần)
-
-- [ ] Endpoint `/api/ai/chat` stream câu trả lời, Claude Haiku 5.5
-- [ ] RAG: tìm mục từ liên quan trong từ điển → đưa vào ngữ cảnh → bắt buộc trích dẫn; không có trong từ điển thì nói "chưa có dữ liệu"
-- [ ] AI-03 chấm dịch câu (điểm + giải thích + bản đúng)
-- [ ] AI-04 gợi ý bài tập cho giáo viên (duyệt tay)
-- [ ] Rate-limit, trần chi tiêu, log câu hỏi để cải thiện từ điển, nút báo sai
-
-**Nghiệm thu:** bộ 30 câu hỏi kiểm thử do khách soạn, ≥ 90% câu trả lời đúng nguồn hoặc từ chối hợp lý.
-
-## Phase 5 — Hoàn thiện (tuỳ chọn, 1.5 tuần)
-
-- [ ] PWA: cài lên màn hình chính, học offline chủ đề đã tải
-- [ ] Ghi âm trực tiếp trong CMS, cắt khoảng lặng
-- [ ] L-08 mẫu câu giao tiếp, L-09 ngữ pháp cơ bản
-- [ ] C-06 thống kê, Google Analytics/Vercel Analytics
-- [ ] Chế độ tối hoàn chỉnh
+- [ ] Máy chủ trung gian nhỏ giữ khoá API (Vercel free hoặc tương đương), giới hạn số lượt
+- [ ] AI-01 chấm dịch theo nghĩa, AI-02 hỏi đáp dựa trên từ điển, AI-03 gợi ý đáp án chấp nhận
+- [ ] Tự ẩn khi mất mạng
 
 ---
 
-## Gợi ý chiến lược demo/đàm phán
+## Gợi ý đàm phán
 
-1. **Làm Phase 0 trước, có thể giảm giá hoặc tính phí nhỏ** — khách cầm điện thoại bấm thử dễ chốt hơn mọi tài liệu.
-2. Phase 1 + 2 là gói "sản phẩm dùng được" → có thể đề xuất **gói combo giảm ~10%** nếu ký cùng lúc.
-3. Thay đổi phạm vi giữa phase (thêm dạng bài, thêm màn hình) tính theo giờ: 250 – 400k/giờ, báo trước khi làm.
-4. Tiến độ tính từ ngày **nhận đủ dữ liệu** (mục 6 của `01-requirements.md`), ghi rõ trong hợp đồng.
-5. Mã nguồn bàn giao khi thanh toán đủ phase cuối khách chọn; tài khoản Vercel/Anthropic đứng tên khách ngay từ đầu.
+1. Phase 0 là phase "bán hàng": khách cài và bấm thử trên máy thật thì dễ chốt Phase 1–2.
+2. Gói 0–3 ký một lần → có thể giảm ~10%.
+3. Thay đổi phạm vi giữa phase: 250 – 400k/giờ, báo trước khi làm.
+4. Tiến độ tính từ ngày nhận đủ nội dung (mục 6 của `01-requirements.md`).
+5. Bàn giao mã nguồn khi thanh toán đủ phase cuối khách chọn.

@@ -1,182 +1,204 @@
 # Học tiếng Ê đê — Đặc tả yêu cầu (SRS)
 
-> Phiên bản 0.1 · 22/10/2026 · Trạng thái: bản nháp để trao đổi với khách hàng
+> Phiên bản 0.2 · 22/10/2026 · **Đổi hướng theo phản hồi khách**: ứng dụng cài trên máy tính (Electron), chạy **không cần mạng**, trọng tâm là *học thẻ quẹt* và *dịch 2 chiều có chấm điểm*.
+> Bản 0.1 (web + Vercel) đã bỏ; xem lịch sử git nếu cần.
 
 ## 1. Mục tiêu & phạm vi
 
-Website học tiếng Ê đê (Rade) cho người nói tiếng Việt, ưu tiên điện thoại (mobile first), gồm 2 khu vực chính **Học** và **Luyện tập**, mở rộng dần với **Tài khoản cá nhân** và **Trợ lý AI**.
+Phần mềm học tiếng Ê đê cho người nói tiếng Việt, **cài trên máy tính Windows**, dùng hoàn toàn offline (phù hợp phòng máy trường học, cơ quan ở vùng mạng yếu). Hai phần chính:
+
+1. **Học** — học từ vựng bằng thẻ quẹt như các app tiếng Anh: thuộc thì quẹt qua, chưa thuộc thì thẻ quay lại xen vào sau.
+2. **Luyện tập** — dịch Việt → Ê đê và Ê đê → Việt, **có chấm điểm**. Chấm điểm bằng thuật toán so khớp chạy trên máy, không cần AI. AI là phần tuỳ chọn về sau, chỉ chạy khi có mạng.
+
+Khách nhấn mạnh: *"thực chất"* — ưu tiên chức năng chạy chắc, chấm điểm rõ ràng hơn là tính năng hào nhoáng.
 
 **Đối tượng người dùng**
 
 | Persona | Mô tả | Nhu cầu chính |
 |---|---|---|
-| Học viên phổ thông | Người Kinh làm việc ở Tây Nguyên (giáo viên, cán bộ, y tế, công an…) | Giao tiếp cơ bản, học nhanh trên điện thoại |
-| Người Ê đê trẻ | Biết nói nhưng chưa đọc/viết chuẩn | Chữ viết, chính tả, phiên âm |
-| Giáo viên / cán bộ nội dung | Người soạn bài | Nhập từ vựng, ghi âm, soạn bài tập |
-| Quản trị viên | Chủ dự án | Quản lý nội dung, người dùng, thống kê |
+| Học viên | Người Kinh làm việc ở Tây Nguyên, học sinh, người Ê đê trẻ chưa đọc/viết chuẩn | Học từ, luyện dịch, xem điểm tiến bộ |
+| Phòng máy dùng chung | Nhiều người học trên 1 máy | Mỗi người 1 hồ sơ riêng trên máy, không cần tài khoản/mạng |
+| Người soạn nội dung | Giáo viên, chuyên gia ngôn ngữ | Nhập từ vựng + ghi âm từ file Excel |
 
-**Ngoài phạm vi (giai đoạn đầu):** app native iOS/Android, thanh toán/thu phí trong app, nhận diện giọng nói chấm phát âm, đa ngôn ngữ giao diện ngoài tiếng Việt.
+**Ngoài phạm vi:** bản web, app điện thoại, tài khoản online/đồng bộ giữa các máy, thanh toán, chấm phát âm qua micro, giọng đọc máy.
 
 ## 2. Đặc thù ngôn ngữ cần xử lý kỹ thuật
 
-1. **Bảng chữ cái Latin có dấu riêng**: `ƀ č đ ñ ă â ĕ ê ê̆ ĭ ŏ ô ô̆ ơ ơ̆ ŭ ư ư̆` … Một số ký tự là *tổ hợp* (chữ + dấu breve kết hợp) → mọi chuỗi phải chuẩn hoá **Unicode NFC** khi lưu và khi so đáp án.
-2. **Bàn phím ảo Ê đê**: điện thoại không gõ được `ƀ, č, ñ, ĕ…` → cần thanh phím phụ hiện trên ô nhập.
-3. **Font**: chọn font hiển thị đúng dấu kết hợp (kiểm tra trên iOS Safari + Android Chrome). DM Sans/Barlow của Minimal cần test; dự phòng Noto Sans.
-4. **Chấm đáp án mềm**: bỏ qua hoa/thường, khoảng trắng thừa, dấu câu; tuỳ chọn "chấp nhận thiếu dấu breve" ở mức dễ.
-5. **Nguồn dữ liệu**: LLM hiện tại hiểu tiếng Ê đê rất hạn chế → AI phải **trả lời dựa trên từ điển của dự án (RAG)**, không tự bịa.
+1. **Bảng chữ cái Latin có dấu riêng**: `ƀ č đ ñ ă â ĕ ê ê̆ ĭ ŏ ô ô̆ ơ ơ̆ ŭ ư ư̆` … Một số ký tự là tổ hợp (chữ + dấu breve) → mọi chuỗi chuẩn hoá **Unicode NFC** khi lưu và khi chấm.
+2. **Gõ chữ Ê đê trên bàn phím máy tính**: người dùng thường đang bật Unikey/EVKey để gõ tiếng Việt. App cung cấp:
+   - Thanh phím ảo bấm chuột ngay dưới ô nhập;
+   - Phím tắt: gõ chữ gốc rồi nhấn `Ctrl+;` để thêm dấu breve/đổi ký tự (`b → ƀ`, `c → č`, `n → ñ`, `e → ĕ` …);
+   - Gõ tiếng Việt bằng Unikey bình thường vẫn hoạt động.
+3. **Font**: đóng gói sẵn font trong app (không phụ thuộc font Windows), kiểm tra hiển thị dấu kết hợp ở Phase 0.
+4. **Chấm đáp án** chi tiết ở mục 3.2.
 
 ## 3. Yêu cầu chức năng
 
-Mã ưu tiên: **M** = bắt buộc (Must), **S** = nên có (Should), **C** = có thì tốt (Could). Cột *Phase* tham chiếu `02-phases-pricing.md`.
+Ưu tiên: **M** bắt buộc · **S** nên có · **C** có thì tốt. Cột *Phase* tham chiếu `02-phases-pricing.md`.
 
 ### 3.1 Khu vực HỌC
 
 | Mã | Chức năng | Chi tiết | Ưu tiên | Phase |
 |---|---|---|---|---|
-| L-01 | Trang chủ học | Lời chào, "tiếp tục bài đang học", danh sách chủ đề, từ của ngày | M | 1 |
-| L-02 | Chủ đề từ vựng | Nhóm theo chủ đề (Chào hỏi, Gia đình, Số đếm, Màu sắc, Cơ thể, Thức ăn, Nông nghiệp, Thời gian…) có ảnh bìa, số từ, % đã học | M | 1 |
-| L-03 | Thẻ từ vựng | Từ Ê đê, nghĩa tiếng Việt, từ loại, **nút phát âm (audio người bản ngữ)**, phiên âm gợi ý, 1–3 câu ví dụ Ê đê ↔ Việt (câu ví dụ cũng có audio nếu có), ảnh minh hoạ (tuỳ chọn), ghi chú văn hoá | M | 1 |
-| L-04 | Chế độ lật thẻ (flashcard) | Vuốt trái/phải: "Đã thuộc / Chưa thuộc", lưu trạng thái | M | 1 |
-| L-05 | Bảng chữ cái & phiên âm | Lưới chữ cái/nguyên âm/phụ âm/vần; chạm để nghe; mỗi âm có 2–3 từ ví dụ; so sánh với âm tiếng Việt gần nhất | M | 1 |
-| L-06 | Bài học vần | Các vần ghép (VD: nguyên âm ngắn/dài ĕ–e, ŏ–o…), cặp tối thiểu (minimal pairs) để luyện tai | S | 1 |
-| L-07 | Tra từ điển | Tìm 2 chiều Ê đê ↔ Việt, **tìm không dấu** (gõ "ƀuôn" hoặc "buon" đều ra), gợi ý khi gõ | M | 1 |
-| L-08 | Mẫu câu giao tiếp | Bộ câu theo tình huống (đi chợ, khám bệnh, hỏi đường, lớp học) có audio | S | 2 |
-| L-09 | Ngữ pháp cơ bản | Bài đọc ngắn: trật tự câu, đại từ, phủ định, câu hỏi | C | 5 |
-| L-10 | Từ đã lưu | Bookmark từ để ôn | S | 1 (local) / 3 (đồng bộ) |
+| L-01 | Màn hình chính | Chào theo hồ sơ, "Tiếp tục học", danh sách chủ đề có % đã thuộc, từ của ngày | M | 1 |
+| L-02 | Chủ đề từ vựng | Nhóm theo chủ đề (Chào hỏi, Gia đình, Số đếm, Màu sắc, Cơ thể, Thức ăn, Nông nghiệp, Thời gian…); lọc cấp độ 1–3 | M | 1 |
+| L-03 | **Học thẻ quẹt** | Xem mục 3.1.1 | M | 1 |
+| L-04 | Chi tiết từ | Từ Ê đê, nghĩa, từ loại, phiên âm gợi ý, nút nghe (ghi âm bản ngữ), câu ví dụ 2 chiều, ảnh, ghi chú | M | 1 |
+| L-05 | Bảng chữ cái & vần | Lưới chữ cái/nguyên âm/phụ âm/vần; bấm để nghe; 2–3 từ ví dụ mỗi âm; cặp âm dễ nhầm | M | 1 |
+| L-06 | Tra từ điển | Tìm 2 chiều, gõ không dấu vẫn ra, gợi ý khi gõ sai 1 ký tự | M | 1 |
+| L-07 | Từ đã lưu | Đánh dấu ⭐ để học riêng | S | 1 |
+| L-08 | Mẫu câu giao tiếp | Câu theo tình huống có ghi âm | C | 4 |
 
-### 3.2 Khu vực LUYỆN TẬP
+#### 3.1.1 Học thẻ quẹt (theo mô tả của khách)
 
-Mọi bài tập có 2 chiều **Ê đê → Việt** và **Việt → Ê đê**, sinh tự động từ kho từ vựng theo chủ đề đã chọn, 10 câu/lượt.
+- Bắt đầu một lượt: chọn chủ đề → bộ thẻ (mặc định 20 thẻ) xáo trộn.
+- Mặt trước: từ Ê đê (hoặc tiếng Việt, tuỳ chiều chọn) + nút nghe. **Bấm/Space** để lật xem mặt sau (nghĩa + ví dụ).
+- **Quẹt phải / phím →** = "Đã thuộc": thẻ rời khỏi bộ.
+- **Quẹt trái / phím ←** = "Chưa thuộc": thẻ được **trộn lại vào bộ**, xuất hiện lại sau 3–5 thẻ.
+- Lượt kết thúc khi mọi thẻ đã được quẹt "Đã thuộc". Màn tổng kết: số thẻ, số lần chưa thuộc, thời gian, những từ khó nhất.
+- Từ chưa thuộc nhiều lần được đánh dấu "từ khó" → ưu tiên trong lượt sau và trong Luyện tập.
+- Hỗ trợ chuột kéo, bàn phím, và màn hình cảm ứng (laptop cảm ứng).
 
-| Mã | Dạng bài | Mô tả | Chấm điểm | Phase |
-|---|---|---|---|---|
-| P-01 | Ghép cặp (Match) | 5 cặp từ, chạm cột trái–phải để nối; sai rung + đỏ | Đúng/sai mỗi cặp, tính thời gian | 2 |
-| P-02 | Trắc nghiệm 4 đáp án | Hiện từ → chọn nghĩa | Đúng/sai | 2 |
-| P-03 | Nghe & chọn | Phát audio → chọn từ đúng | Đúng/sai | 2 |
-| P-04 | Điền nghĩa | Gõ nghĩa; có bàn phím ảo Ê đê | So khớp mềm (mục 2.4), chấp nhận nhiều đáp án đúng | 2 |
-| P-05 | Điền khuyết câu | Câu ví dụ bị ẩn 1 từ | So khớp mềm | 2 |
-| P-06 | Sắp xếp câu | Kéo thả các từ thành câu đúng | Đúng thứ tự | 2 |
-| P-07 | Dịch câu (tự do) | Gõ bản dịch cả câu | Phase 2: so với danh sách đáp án chấp nhận + độ giống (%). Phase 4: AI chấm & giải thích | 2 / 4 |
-| P-08 | Ôn tập thông minh | Lặp lại ngắt quãng (SRS kiểu Anki/SM-2) dựa trên từ sai | — | 3 |
-| P-09 | Kiểm tra cuối chủ đề | 20 câu trộn dạng, đạt ≥ 80% mở huy hiệu | Điểm /100 | 3 |
+### 3.2 Khu vực LUYỆN TẬP (chấm điểm)
 
-**Màn hình kết quả**: điểm, số đúng/sai, thời gian, danh sách câu sai kèm đáp án + nút nghe, nút "Luyện lại câu sai".
+Chọn chủ đề + chiều dịch (**Việt → Ê đê** hoặc **Ê đê → Việt**) → 10 câu → màn kết quả. Câu hỏi máy tự sinh từ kho từ vựng/câu ví dụ.
 
-**Công thức điểm đề xuất**: mỗi câu đúng 10 điểm; đúng lần đầu +2; chuỗi đúng liên tiếp ≥ 5 nhân 1.2; gợi ý (hint) −3.
+| Mã | Dạng bài | Mô tả | Phase |
+|---|---|---|---|
+| P-01 | **Dịch từ** | Hiện 1 từ → gõ bản dịch | 2 |
+| P-02 | **Dịch câu** | Hiện 1 câu ví dụ → gõ bản dịch cả câu | 2 |
+| P-03 | Trắc nghiệm | Chọn 1 trong 4 nghĩa | 2 |
+| P-04 | Ghép cặp | 5 từ ↔ 5 nghĩa, bấm để nối | 2 |
+| P-05 | Nghe & chọn | Nghe ghi âm → chọn từ | 2 |
+| P-06 | Sắp xếp câu | Bấm các từ theo đúng thứ tự | 2 |
+| P-07 | Bài kiểm tra chủ đề | 20 câu trộn các dạng, điểm /100, đạt ≥ 80 mở huy hiệu | 2 |
 
-### 3.3 Tài khoản cá nhân (Phase 3)
+**Cách chấm (chạy offline, không AI):**
 
-| Mã | Chức năng | Ghi chú |
+| Bước | Dịch từ | Dịch câu |
 |---|---|---|
-| A-01 | Đăng nhập Google (1 chạm) | Auth.js; tuỳ chọn thêm email magic-link |
-| A-02 | Dùng thử không cần đăng nhập | Tiến độ lưu localStorage, đăng nhập thì gộp lên server |
-| A-03 | Hồ sơ | Tên, ảnh, mục tiêu ngày (5/10/20 phút), cấp độ |
-| A-04 | Tiến độ | % theo chủ đề, số từ đã thuộc, lịch sử bài làm |
-| A-05 | Streak & XP | Chuỗi ngày học, điểm kinh nghiệm, huy hiệu |
-| A-06 | Bảng xếp hạng tuần | Tuỳ chọn — phụ thuộc lựa chọn DB (xem 02) |
+| 1. Chuẩn hoá | NFC, chữ thường, bỏ khoảng trắng thừa, bỏ dấu câu | như trên |
+| 2. So với **mọi đáp án chấp nhận** khách nhập | khớp hoàn toàn → **Đúng** (10đ) | khớp hoàn toàn → **100%** |
+| 3. Gần đúng | sai 1 ký tự hoặc chỉ thiếu dấu breve → **Gần đúng** (5đ) + chỉ ra chỗ sai | tính độ giống theo từ (đúng từ, đúng thứ tự) → điểm 0–100%, **tô màu từng từ** đúng/sai/thiếu |
+| 4. Sai | 0đ + hiện đáp án đúng + nút nghe | < 50% = sai, hiện đáp án gần nhất |
 
-### 3.4 Trợ lý AI (Phase 4)
+- Có nút **"Tôi đúng mà"**: người học đánh dấu đáp án của mình là chấp nhận được → lưu lại để người soạn nội dung duyệt bổ sung vào danh sách đáp án (xuất ra file).
+- Điểm lượt: tổng điểm câu; đúng ngay +2; chuỗi ≥ 5 câu đúng ×1.2; dùng gợi ý −3. Công thức chốt ở Phase 0.
+- **Màn kết quả**: điểm, đúng/gần đúng/sai, thời gian, danh sách câu sai + đáp án, nút "Luyện lại câu sai".
+- **Giới hạn cần nói rõ:** máy chấm theo đáp án mẫu, **không hiểu nghĩa**. Dịch đúng mà diễn đạt khác đáp án mẫu chỉ được điểm một phần. Khắc phục bằng cách nhập nhiều đáp án chấp nhận cho mỗi câu, và dùng nút "Tôi đúng mà". Chấm theo nghĩa cần AI (Phase 4, cần mạng).
 
-| Mã | Chức năng | Ghi chú |
-|---|---|---|
-| AI-01 | Chat hỏi đáp | "Cảm ơn tiếng Ê đê nói sao?", "Phân biệt ĕ và e" — trả lời bằng tiếng Việt, **trích dẫn mục từ điển** làm nguồn, nút nghe audio từ được nhắc |
-| AI-02 | Tra cứu thông minh | Tìm theo nghĩa gần đúng ("con vật nuôi trong nhà") |
-| AI-03 | Chấm dịch câu | Cho điểm 0–100 + giải thích lỗi + bản đúng, dựa trên câu mẫu |
-| AI-04 | Sinh bài tập | Giáo viên chọn chủ đề → AI đề xuất câu ví dụ/bài tập, **bắt buộc duyệt tay** trước khi xuất bản |
-| AI-05 | Giới hạn & an toàn | Rate-limit theo user/IP (VD 30 câu/ngày cho khách), cảnh báo "AI có thể sai", nút báo lỗi |
-
-Mô hình đề xuất: Claude Haiku 5.5 (rẻ, nhanh) cho chat; Claude Sonnet 5.5 cho chấm dịch câu nếu cần chất lượng cao hơn.
-
-### 3.5 Quản trị nội dung (CMS)
+### 3.3 Hồ sơ người học & tiến độ (trên máy, không cần mạng)
 
 | Mã | Chức năng | Phase |
 |---|---|---|
-| C-01 | Nhập từ vựng hàng loạt từ **Google Sheet/CSV** (mẫu cột cố định) → kiểm tra lỗi → xuất bản | 1 |
-| C-02 | Upload audio hàng loạt (đặt tên file theo mã từ) | 1 |
-| C-03 | Sửa/xoá từng mục từ, ghi âm trực tiếp trên trình duyệt | 3 |
-| C-04 | Quản lý chủ đề, thứ tự bài | 1 |
-| C-05 | Hộp thư báo lỗi nội dung từ người dùng | 4 |
-| C-06 | Thống kê: người dùng hoạt động, từ hay sai nhất | 5 |
+| U-01 | Nhiều hồ sơ trên 1 máy: chọn tên + ảnh đại diện khi mở app, mã PIN 4 số tuỳ chọn | 2 |
+| U-02 | Tiến độ: % thuộc theo chủ đề, từ khó, lịch sử điểm (biểu đồ theo ngày) | 2 |
+| U-03 | Chuỗi ngày học 🔥, XP, huy hiệu | 2 |
+| U-04 | Ôn tập ngắt quãng: "Hôm nay cần ôn 12 từ" | 2 |
+| U-05 | Bảng xếp hạng các hồ sơ **trên cùng máy** (cho phòng máy/lớp học) | 2 |
+| U-06 | Xuất kết quả học ra file Excel (giáo viên thu điểm) | 3 |
+| U-07 | Sao lưu / khôi phục tiến độ ra file (đổi máy, cài lại Windows) | 3 |
+
+### 3.4 Quản lý nội dung (trong app, chế độ quản trị)
+
+| Mã | Chức năng | Phase |
+|---|---|---|
+| C-01 | Mở chế độ quản trị bằng mật khẩu | 1 |
+| C-02 | Nhập từ vựng + câu ví dụ + **các đáp án chấp nhận** từ file Excel theo mẫu → báo dòng lỗi → áp dụng | 1 |
+| C-03 | Nhập thư mục ghi âm (tên file = mã từ), tự nén | 1 |
+| C-04 | Sửa/xoá từng từ trong app | 3 |
+| C-05 | Đóng gói nội dung thành **1 file gói** (`.ede`) để chép qua USB/Zalo sang máy khác; máy nhận bấm "Nhập gói nội dung" | 3 |
+| C-06 | Duyệt danh sách đáp án "Tôi đúng mà" người học gửi | 3 |
+
+### 3.5 Trợ lý AI (tuỳ chọn, chỉ khi có mạng — Phase 4)
+
+| Mã | Chức năng |
+|---|---|
+| AI-01 | Chấm dịch câu theo nghĩa: điểm + giải thích + bản đúng, dựa trên câu mẫu |
+| AI-02 | Hỏi đáp tra cứu, trả lời dựa trên từ điển trong app (không tự bịa) |
+| AI-03 | Gợi ý thêm đáp án chấp nhận cho người soạn nội dung duyệt |
+
+Khi không có mạng, các nút AI ẩn đi, app vẫn chấm điểm offline bình thường. Cần khoá API Anthropic của khách + một máy chủ trung gian nhỏ để không lộ khoá trong app.
 
 ## 4. Yêu cầu phi chức năng
 
 | Nhóm | Yêu cầu |
 |---|---|
-| Mobile first | Thiết kế từ 360px; chạm tối thiểu 44×44px; thanh điều hướng dưới (bottom nav) trên mobile, sidebar trái từ `lg` (≥1200px) như Minimal |
-| Hiệu năng | Lighthouse mobile ≥ 90; LCP < 2.5s trên 4G; audio tải lười (lazy) và cache |
-| Offline (PWA) | Cài lên màn hình chính; học lại chủ đề đã mở khi mất mạng (Phase 5) |
-| Khả năng tiếp cận | Tương phản AA, có nhãn cho nút audio, hỗ trợ chế độ tối |
-| SEO | Mỗi mục từ có URL riêng `/tu-dien/[slug]` render tĩnh → lên Google khi người ta tra "… tiếng Ê đê là gì" |
-| Bảo mật | Admin bảo vệ bằng đăng nhập + danh sách email; khoá API chỉ ở server; token Blob không lộ ra client |
-| Dữ liệu cá nhân | Tuân thủ Nghị định 13/2023/NĐ-CP: chính sách quyền riêng tư, cho phép xoá tài khoản |
-| Trình duyệt | iOS Safari 16+, Android Chrome 2 phiên bản gần nhất, desktop Chrome/Edge/Safari/Firefox |
+| Hệ điều hành | **Windows 10/11 64-bit** (chính). macOS là tuỳ chọn, báo giá thêm. Không hỗ trợ Windows 7/8 |
+| Cấu hình | Chạy được trên máy văn phòng phổ thông: RAM 4GB, CPU 2 nhân |
+| Offline | 100% chức năng Học & Luyện tập chạy không mạng. Nội dung + ghi âm đóng gói trong bộ cài |
+| Cài đặt | 1 file `.exe` cài đặt (kèm bản portable chạy từ USB); dung lượng dự kiến 120–250MB tuỳ lượng ghi âm |
+| Khởi động | Mở app < 5 giây; chuyển màn < 300ms |
+| Màn hình | Tối thiểu 1280×720; co giãn tới 1920×1080; phóng to chữ (Ctrl +/−) |
+| Thao tác | Dùng được hoàn toàn bằng bàn phím (phím tắt hiện trên nút) và bằng chuột |
+| Dữ liệu | Tiến độ lưu trong thư mục người dùng Windows (`%APPDATA%`), không mất khi cập nhật app |
+| Bảo mật | Không thu thập dữ liệu, không gửi gì ra ngoài (trừ khi dùng AI). Electron cấu hình an toàn: `contextIsolation`, không bật `nodeIntegration` cho giao diện |
+| Cập nhật | Gửi bản cài mới (ghi đè, giữ tiến độ). Tự động cập nhật qua mạng là tuỳ chọn |
 
 ## 5. Kiến trúc kỹ thuật
 
 ```
-Next.js 15 (App Router, TypeScript)  ──deploy──▶  Vercel
- ├─ UI: MUI v7 + theme port từ Minimal (MIT)  · Iconify icons
- ├─ Nội dung: JSON + audio trên Vercel Blob  ─▶ đọc qua CDN, ISR revalidate
- ├─ Route Handlers /api/*  (admin upload, chấm bài, AI)
- ├─ Auth.js (Google)                              [Phase 3]
- ├─ DB người dùng: xem lựa chọn ở 02              [Phase 3]
- └─ Claude API (RAG trên từ điển)                 [Phase 4]
+Electron (Windows .exe, electron-builder)
+ ├─ Main process (Node.js)
+ │   ├─ SQLite (better-sqlite3): hồ sơ, tiến độ, lịch sử điểm, đáp án "Tôi đúng mà"
+ │   ├─ Đọc/ghi gói nội dung, nhập Excel (SheetJS), nén audio
+ │   └─ IPC an toàn qua preload (contextBridge)
+ └─ Renderer: React 19 + Vite + MUI v7 + theme Minimal (bộ Minimal gốc dùng Vite → tái sử dụng gần như nguyên vẹn)
+     ├─ Học: thẻ quẹt (framer-motion), tra từ (tìm mờ trên chỉ mục nạp sẵn)
+     ├─ Luyện tập: sinh câu hỏi + bộ chấm điểm (hàm thuần, có unit test)
+     └─ Tiến độ: biểu đồ (ApexCharts — có sẵn trong Minimal)
 ```
 
-### 5.1 Lưu trữ trên Vercel Blob
-
-Blob là **kho file**, không phải CSDL: không truy vấn, không ghi đồng thời an toàn. Phù hợp với *nội dung chỉ admin ghi, mọi người đọc*.
+### 5.1 Dữ liệu
 
 ```
-blob/
-├─ content/
-│  ├─ manifest.json          # phiên bản, danh sách chủ đề, thời điểm xuất bản
-│  ├─ topics/{topicId}.json  # từ vựng + câu ví dụ của 1 chủ đề
-│  ├─ alphabet.json          # chữ cái, vần, ví dụ
-│  └─ search-index.json      # chỉ mục tìm kiếm rút gọn (có cột không dấu)
-├─ audio/{wordId}.mp3        # và audio/sentences/{sentenceId}.mp3
-└─ images/{wordId}.webp
+<thư mục cài app>/resources/content/      # nội dung gốc đi kèm bộ cài (chỉ đọc)
+├─ manifest.json        # phiên bản gói, danh sách chủ đề
+├─ topics/{topicId}.json
+├─ alphabet.json
+└─ audio/{wordId}.mp3, audio/sentences/{sentenceId}.mp3
+
+%APPDATA%/HocEde/
+├─ content/             # gói nội dung nhập thêm (ghi đè bản gốc nếu mới hơn)
+└─ hocede.db            # SQLite: profiles, card_progress, attempts, accepted_suggestions
 ```
 
-Mô hình dữ liệu một mục từ:
+Một mục từ:
 
 ```json
 {
   "id": "w_0001",
-  "rade": "kkuh",
-  "radeNoAccent": "kkuh",
-  "vi": ["chào", "cúi chào"],
-  "pos": "động từ",
-  "ipa": "/kkuh/",
-  "topicId": "chao-hoi",
+  "rade": "…",
+  "vi": ["nghĩa chính", "nghĩa phụ"],
+  "acceptRade": ["các cách viết Ê đê được chấp nhận"],
+  "pos": "danh từ",
+  "topicId": "gia-dinh",
   "level": 1,
   "audio": "audio/w_0001.mp3",
-  "image": null,
   "examples": [
-    { "id": "s_0001", "rade": "…", "vi": "…", "audio": "audio/sentences/s_0001.mp3" }
-  ],
-  "note": "",
-  "updatedAt": "2026-10-22T00:00:00Z"
+    { "id": "s_0001", "rade": "…", "vi": "…",
+      "acceptVi": ["các bản dịch Việt chấp nhận"],
+      "acceptRade": ["các bản dịch Ê đê chấp nhận"],
+      "audio": "audio/sentences/s_0001.mp3" }
+  ]
 }
 ```
-*(Ví dụ minh hoạ cấu trúc; nội dung thật do chuyên gia ngôn ngữ của khách cung cấp.)*
 
-Luồng xuất bản: Admin upload CSV → server kiểm tra (trùng mã, thiếu nghĩa, NFC) → ghi `topics/*.json` + `search-index.json` → cập nhật `manifest.json` → gọi `revalidatePath` để trang cập nhật.
+## 6. Phụ thuộc từ phía khách hàng
 
-## 6. Phụ thuộc từ phía khách hàng (rất quan trọng)
-
-1. **Danh sách từ vựng** theo mẫu Google Sheet (tối thiểu 300 từ / 10 chủ đề cho MVP) đã được người bản ngữ/chuyên gia duyệt.
-2. **File ghi âm** người bản ngữ cho từ và câu ví dụ (mp3/m4a, đặt tên theo mã). Không có audio → nút phát âm sẽ ẩn.
-3. Bảng chữ cái/vần chuẩn mà dự án theo (có nhiều cách phiên âm khác nhau).
-4. Logo, tên miền, tài khoản Vercel/Anthropic đứng tên khách hàng.
-5. Người duyệt nghiệm thu mỗi phase.
+1. **Từ vựng + câu ví dụ** theo mẫu Excel (tối thiểu 300 từ / 10 chủ đề, 100 câu cho MVP), đã được người bản ngữ duyệt.
+2. **Đáp án chấp nhận**: với mỗi câu dùng để luyện dịch, càng nhiều cách dịch đúng thì chấm càng công bằng (khuyến nghị 2–4 cách/câu).
+3. **Ghi âm** người bản ngữ (mp3/m4a, tên file = mã từ).
+4. Chuẩn bảng chữ cái/vần dự án theo.
+5. Tên phần mềm, logo, 1–2 máy tính thật để thử nghiệm tại chỗ.
 
 ## 7. Rủi ro
 
-| Rủi ro | Ảnh hưởng | Giảm thiểu |
-|---|---|---|
-| Chậm có nội dung/audio | Trễ toàn dự án | Dùng 30–50 từ mẫu để demo; tiến độ phase tính từ ngày nhận đủ dữ liệu |
-| AI trả lời sai tiếng Ê đê | Mất uy tín | RAG bắt buộc, chỉ trả lời từ có trong từ điển, nhãn cảnh báo |
-| Vercel Hobby (free) **không cho phép dùng thương mại** | Vi phạm điều khoản nếu dự án thu tiền/quảng cáo | Phi lợi nhuận/giáo dục: Hobby được. Có thu phí: Vercel Pro (~20 USD/tháng) |
-| Vượt hạn mức Blob free | Gián đoạn | Nén audio mono 64kbps (~10–20KB/từ), theo dõi dung lượng |
-| Font hiển thị sai dấu kết hợp | Đọc sai chữ | Test font sớm ở Phase 0 |
+| Rủi ro | Giảm thiểu |
+|---|---|
+| Thiếu đáp án chấp nhận → chấm dịch câu "khó tính" | Nút "Tôi đúng mà" + quy trình duyệt bổ sung; nói rõ giới hạn ngay từ đầu |
+| Windows cảnh báo "phần mềm không rõ nguồn gốc" (SmartScreen) khi cài | Hướng dẫn bấm "Vẫn chạy", hoặc khách mua chứng thư ký số code-signing (~5–10 triệu/năm) |
+| Antivirus nhà trường chặn file `.exe` lạ | Có ký số; hoặc bản portable; gửi hướng dẫn cho IT |
+| Unikey xung đột khi gõ ký tự Ê đê | Thanh phím ảo + phím tắt riêng; test với Unikey & EVKey ở Phase 0 |
+| Cập nhật nội dung khó vì máy không có mạng | Gói nội dung `.ede` chép qua USB (Phase 3) |
+| Chậm có nội dung/ghi âm | Demo bằng 30–50 từ mẫu; tiến độ tính từ ngày nhận đủ dữ liệu |
