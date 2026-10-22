@@ -24,13 +24,15 @@ Khách nhấn mạnh: *"thực chất"* — ưu tiên chức năng chạy chắc
 
 ## 2. Đặc thù ngôn ngữ cần xử lý kỹ thuật
 
-1. **Bảng chữ cái Latin có dấu riêng**: `ƀ č đ ñ ă â ĕ ê ê̆ ĭ ŏ ô ô̆ ơ ơ̆ ŭ ư ư̆` … Một số ký tự là tổ hợp (chữ + dấu breve) → mọi chuỗi chuẩn hoá **Unicode NFC** khi lưu và khi chấm.
-2. **Gõ chữ Ê đê trên bàn phím máy tính**: người dùng thường đang bật Unikey/EVKey để gõ tiếng Việt. App cung cấp:
+1. **Bảng chữ cái 38 chữ** (Latin, không có `c` đứng riêng): `a ă â b ƀ č d đ e ĕ ê ê̆ g h i ĭ j k l m n ñ o ŏ ô ô̆ ơ ơ̆ p r s t u ŭ ư ư̆ w y`. Bốn chữ `ê̆ ô̆ ơ̆ ư̆` **không có mã Unicode dựng sẵn** (chữ gốc + U+0306) → mọi chuỗi chuẩn hoá **NFC** khi lưu và khi chấm; tô màu/đếm ký tự theo grapheme. Chi tiết: `05-research-ede.md`.
+2. **Gõ chữ Ê đê trên bàn phím máy tính** (người dùng thường đang bật Unikey/EVKey). App hỗ trợ 3 cách:
    - Thanh phím ảo bấm chuột ngay dưới ô nhập;
-   - Phím tắt: gõ chữ gốc rồi nhấn `Ctrl+;` để thêm dấu breve/đổi ký tự (`b → ƀ`, `c → č`, `n → ñ`, `e → ĕ` …);
-   - Gõ tiếng Việt bằng Unikey bình thường vẫn hoạt động.
-3. **Font**: đóng gói sẵn font trong app (không phụ thuộc font Windows), kiểm tra hiển thị dấu kết hợp ở Phase 0.
-4. **Chấm đáp án** chi tiết ở mục 3.2.
+   - Quy ước cộng đồng đang dùng: **gõ chữ + số 0** (`b0 → ƀ`, `c0 → č` …; khách xác nhận bảng đầy đủ);
+   - Gõ tiếng Việt bằng Unikey bình thường cho các chữ trùng (â, ê, ô, ơ, ư, ă).
+3. **Font**: đóng gói sẵn font phủ đủ 38 chữ hoa + thường (không phụ thuộc font Windows), test hiển thị dấu kết hợp ở Phase 0.
+4. **Không có thanh điệu**: bộ chấm phát hiện người học gõ nhầm dấu thanh tiếng Việt vào câu Ê đê và nhắc riêng.
+5. **Phương ngữ chuẩn Kpă** (Buôn Ma Thuột) cho nội dung và ghi âm.
+6. **Chấm đáp án** chi tiết ở mục 3.2.
 
 ## 3. Yêu cầu chức năng
 
@@ -79,7 +81,7 @@ Chọn chủ đề + chiều dịch (**Việt → Ê đê** hoặc **Ê đê →
 |---|---|---|
 | 1. Chuẩn hoá | NFC, chữ thường, bỏ khoảng trắng thừa, bỏ dấu câu | như trên |
 | 2. So với **mọi đáp án chấp nhận** khách nhập | khớp hoàn toàn → **Đúng** (10đ) | khớp hoàn toàn → **100%** |
-| 3. Gần đúng | sai 1 ký tự hoặc chỉ thiếu dấu breve → **Gần đúng** (5đ) + chỉ ra chỗ sai | tính độ giống theo từ (đúng từ, đúng thứ tự) → điểm 0–100%, **tô màu từng từ** đúng/sai/thiếu |
+| 3. Gần đúng | sai 1 ký tự, thiếu dấu trăng, `b`↔`ƀ`, hoặc thừa dấu thanh tiếng Việt → **Gần đúng** (5đ) + chỉ ra chỗ sai và loại lỗi | tính độ giống theo từ (đúng từ, đúng thứ tự) → điểm 0–100%, **tô màu từng từ** đúng/sai/thiếu |
 | 4. Sai | 0đ + hiện đáp án đúng + nút nghe | < 50% = sai, hiện đáp án gần nhất |
 
 - Có nút **"Tôi đúng mà"**: người học đánh dấu đáp án của mình là chấp nhận được → lưu lại để người soạn nội dung duyệt bổ sung vào danh sách đáp án (xuất ra file).
@@ -189,8 +191,9 @@ Một mục từ:
 1. **Từ vựng + câu ví dụ** theo mẫu Excel (tối thiểu 300 từ / 10 chủ đề, 100 câu cho MVP), đã được người bản ngữ duyệt.
 2. **Đáp án chấp nhận**: với mỗi câu dùng để luyện dịch, càng nhiều cách dịch đúng thì chấm càng công bằng (khuyến nghị 2–4 cách/câu).
 3. **Ghi âm** người bản ngữ (mp3/m4a, tên file = mã từ).
-4. Chuẩn bảng chữ cái/vần dự án theo.
-5. Tên phần mềm, logo, 1–2 máy tính thật để thử nghiệm tại chỗ.
+4. Chuẩn bảng chữ cái/vần dự án theo (chốt thứ tự nhóm o/ô/ơ), bảng quy ước gõ `chữ + 0`, danh sách cặp âm dễ nhầm.
+5. **Chương trình khung bồi dưỡng tiếng Ê đê** (nếu nhắm tới lớp cán bộ) để sắp chủ đề cho khớp.
+6. Tên phần mềm, logo, 1–2 máy tính thật để thử nghiệm tại chỗ.
 
 ## 7. Rủi ro
 
