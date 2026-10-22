@@ -16,7 +16,7 @@ import { isEnabled, upcoming, SHOW_TEASERS } from 'src/config/release';
 
 import { Iconify } from 'src/components/iconify';
 import { Leaderboard } from 'src/sections/profiles';
-import { BROCADE, BrocadeBand, CornerDiamond, brocadeBackdrop } from 'src/components/ornaments';
+import { Pompom, BROCADE, BrocadeBand, CornerDiamond, brocadeBackdrop } from 'src/components/ornaments';
 import { TopicGrid } from 'src/components/topic-grid';
 import { RadeText, AudioButton, SampleDataChip } from 'src/components/common';
 
@@ -78,13 +78,15 @@ function Hero({ onLearn, onSecond }: { onLearn: () => void; onSecond: () => void
     <Card
       sx={{
         color: 'common.white',
-        background: (t) => `linear-gradient(120deg, ${t.palette.primary.darker} 0%, ${t.palette.primary.dark} 45%, ${t.palette.primary.main} 100%)`,
+        bgcolor: BROCADE.black,
+        ...brocadeBackdrop('#FFFFFF', 0.12, 72),
         overflow: 'hidden',
       }}
     >
-      <BrocadeBand motif="sawtooth" height={12} edges={false} />
+      <BrocadeBand motif="sleeve" height={14} />
+      <Pompom size={18} sx={{ position: 'absolute', top: 6, left: 28, zIndex: 2 }} />
+      <Pompom size={18} sx={{ position: 'absolute', top: 6, right: 28, zIndex: 2 }} />
       <Stack direction="row" alignItems="center" sx={{ p: { xs: 4, md: 5 }, position: 'relative' }}>
-        <Box sx={{ position: 'absolute', inset: 0, left: '50%', ...brocadeBackdrop('#FFFFFF', 0.1, 64), maskImage: 'linear-gradient(90deg, transparent, #000 40%)' }} />
         <Box sx={{ maxWidth: 560, position: 'relative', zIndex: 1 }}>
           <Typography variant="overline" sx={{ opacity: 0.72 }}>
             Hriăm klei Êđê
@@ -112,7 +114,7 @@ function Hero({ onLearn, onSecond }: { onLearn: () => void; onSecond: () => void
         </Box>
         <FloatingLetters />
       </Stack>
-      <BrocadeBand motif="diamond" height={18} />
+      <BrocadeBand motif="skirt" height={40} />
     </Card>
   );
 }
@@ -141,7 +143,7 @@ function FloatingLetters() {
               fontWeight: 800,
               fontSize: l.s,
               lineHeight: 1,
-              color: alpha('#fff', 0.9),
+              color: BROCADE.cream,
               textShadow: '0 12px 24px rgba(0,0,0,.24)',
             }}
           >
@@ -263,7 +265,7 @@ function ComingSoon() {
   return (
     <Card sx={{ p: 3, color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop('#E0A100', 0.08, 48) }}>
       <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
-        <Iconify icon="solar:rocket-2-bold-duotone" width={22} sx={{ color: BROCADE.gold }} />
+        <Iconify icon="solar:rocket-2-bold-duotone" width={22} sx={{ color: BROCADE.yellow }} />
         <Typography variant="subtitle2">Sắp ra mắt</Typography>
       </Stack>
       <Stack spacing={2}>

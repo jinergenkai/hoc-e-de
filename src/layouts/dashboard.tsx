@@ -20,7 +20,7 @@ import { isEnabled, releaseOf, SHOW_TEASERS } from 'src/config/release';
 
 import { Iconify } from 'src/components/iconify';
 import { ProfileAvatar } from 'src/sections/profiles';
-import { BROCADE, BrocadeBand, BrocadeColumn, CornerDiamond, brocadeBackdrop } from 'src/components/ornaments';
+import { Pompom, BROCADE, BrocadeBand, BrocadeColumn, brocadeBackdrop } from 'src/components/ornaments';
 
 export const NAV: { path: string; title: string; icon: string; feature?: FeatureKey }[] = [
   { path: '/', title: 'Trang chủ', icon: 'solar:home-smile-bold-duotone' },
@@ -74,7 +74,7 @@ function Nav() {
   return (
     <Box component="nav" sx={{ width: NAV_WIDTH, flexShrink: 0, position: 'sticky', top: 0, height: '100vh', display: 'flex', bgcolor: 'background.paper' }}>
       <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-        <BrocadeBand motif="diamond" height={14} />
+        <BrocadeBand motif="skirt" height={30} />
         <Stack direction="row" alignItems="center" spacing={1.5} sx={{ px: 3, py: 3 }}>
           <Logo />
           <Box>
@@ -116,7 +116,7 @@ function Nav() {
         {isEnabled('gamification') && (
           <Box sx={{ m: 2, p: 2.5, borderRadius: 2, position: 'relative', overflow: 'hidden', color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop('#E0A100', 0.1, 40) }}>
             <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
-              <Iconify icon="solar:cup-star-bold-duotone" width={24} sx={{ color: BROCADE.gold }} />
+              <Iconify icon="solar:cup-star-bold-duotone" width={24} sx={{ color: BROCADE.yellow }} />
               <Typography variant="subtitle2">Mục tiêu hôm nay</Typography>
             </Stack>
             <Typography variant="caption" sx={{ opacity: 0.72, display: 'block', mb: 1 }}>
@@ -125,9 +125,9 @@ function Nav() {
             <LinearProgress variant="determinate" value={pct} color="secondary" sx={{ bgcolor: alpha(BROCADE.white, 0.16) }} />
           </Box>
         )}
-        <BrocadeBand motif="sawtooth" height={12} edges={false} />
+        <BrocadeBand motif="sleeve" height={14} />
       </Box>
-      <BrocadeColumn motif="zigzag" width={8} sx={{ opacity: 0.9 }} />
+      <BrocadeColumn width={12} />
     </Box>
   );
 }
@@ -163,18 +163,19 @@ function Logo() {
         position: 'relative',
         display: 'grid',
         placeItems: 'center',
-        color: 'common.white',
         fontFamily: '"Noto Sans"',
         fontWeight: 800,
         fontSize: 22,
+        color: BROCADE.cream,
         bgcolor: BROCADE.black,
-        ...brocadeBackdrop('#C8401E', 0.35, 23),
-        boxShadow: (t) => t.customShadows.primary,
-        border: `2px solid ${BROCADE.gold}`,
+        boxShadow: (t) => t.customShadows.z8,
+        borderBottom: `4px solid ${BROCADE.red}`,
       }}
     >
       Ƀ
-      <CornerDiamond size={14} sx={{ position: 'absolute', right: -6, bottom: -6 }} />
+      {/* pom-poms, like the shoulders of an Ê-đê shirt */}
+      <Pompom size={12} sx={{ position: 'absolute', left: -5, top: -5 }} />
+      <Pompom size={12} sx={{ position: 'absolute', right: -5, top: -5 }} />
     </Box>
   );
 }

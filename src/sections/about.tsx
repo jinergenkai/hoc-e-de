@@ -11,7 +11,7 @@ import { RELEASE, RELEASES } from 'src/config/release';
 
 import { Iconify } from 'src/components/iconify';
 import { PageTitle } from 'src/components/common';
-import { Gong, BROCADE, BrocadeBand, CornerDiamond, brocadeBackdrop } from 'src/components/ornaments';
+import { Gong, Fringe, BROCADE, BrocadeBand, CornerDiamond, brocadeBackdrop } from 'src/components/ornaments';
 
 const CREDITS = [
   { name: 'Minimal UI', detail: 'Khung giao diện (material-kit-react)', license: 'MIT', url: 'https://github.com/minimal-ui-kit/material-kit-react' },
@@ -25,30 +25,33 @@ export function AboutPage() {
     <>
       <PageTitle title="Giới thiệu" subtitle="Thông tin sáng kiến và đơn vị triển khai" />
 
-      <Card sx={{ overflow: 'hidden', mb: 4, color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop('#E0A100', 0.08, 64) }}>
-        <BrocadeBand motif="diamond" height={16} />
-        <Stack direction={{ xs: 'column', md: 'row' }} alignItems="center" spacing={4} sx={{ p: { xs: 4, md: 5 } }}>
-          <Gong size={150}>
-            <Typography sx={{ fontFamily: '"Noto Sans"', fontWeight: 800, fontSize: 56, color: '#5F120B', lineHeight: 1 }}>Ƀ</Typography>
-          </Gong>
-          <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="overline" sx={{ color: BROCADE.gold, letterSpacing: 2 }}>
-              Sáng kiến
-            </Typography>
-            <Typography variant="h3" sx={{ fontFamily: '"Noto Sans"', mt: 0.5 }}>
-              {ABOUT.appName}
-            </Typography>
-            <Typography sx={{ opacity: 0.8, mb: 2 }}>{ABOUT.tagline}</Typography>
-            <Typography variant="body2" sx={{ opacity: 0.72, maxWidth: 720 }}>
-              {ABOUT.initiative}
-            </Typography>
-            <Typography variant="caption" sx={{ display: 'block', mt: 2, opacity: 0.6 }}>
-              Phiên bản {__APP_VERSION__} · Đợt {RELEASE}/{RELEASES.length}
-            </Typography>
-          </Box>
-        </Stack>
-        <BrocadeBand motif="sawtooth" height={12} edges={false} />
-      </Card>
+      <Box sx={{ mb: 4 }}>
+        <Card sx={{ overflow: 'hidden', borderBottomLeftRadius: 0, borderBottomRightRadius: 0, color: BROCADE.white, bgcolor: BROCADE.black, ...brocadeBackdrop('#E0A100', 0.08, 64) }}>
+          <BrocadeBand motif="skirt" height={32} />
+          <Stack direction={{ xs: 'column', md: 'row' }} alignItems="center" spacing={4} sx={{ p: { xs: 4, md: 5 } }}>
+            <Gong size={150}>
+              <Typography sx={{ fontFamily: '"Noto Sans"', fontWeight: 800, fontSize: 56, color: '#5F120B', lineHeight: 1 }}>Ƀ</Typography>
+            </Gong>
+            <Box sx={{ flexGrow: 1 }}>
+              <Typography variant="overline" sx={{ color: BROCADE.yellow, letterSpacing: 2 }}>
+                Sáng kiến
+              </Typography>
+              <Typography variant="h3" sx={{ fontFamily: '"Noto Sans"', mt: 0.5 }}>
+                {ABOUT.appName}
+              </Typography>
+              <Typography sx={{ opacity: 0.8, mb: 2 }}>{ABOUT.tagline}</Typography>
+              <Typography variant="body2" sx={{ opacity: 0.72, maxWidth: 720 }}>
+                {ABOUT.initiative}
+              </Typography>
+              <Typography variant="caption" sx={{ display: 'block', mt: 2, opacity: 0.6 }}>
+                Phiên bản {__APP_VERSION__} · Đợt {RELEASE}/{RELEASES.length}
+              </Typography>
+            </Box>
+          </Stack>
+          <BrocadeBand motif="skirt" height={32} />
+        </Card>
+        <Fringe height={26} />
+      </Box>
 
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 5 }}>
@@ -71,7 +74,7 @@ export function AboutPage() {
                       fontWeight: 800,
                       color: 'common.white',
                       bgcolor: BROCADE.red,
-                      boxShadow: `0 0 0 3px ${BROCADE.gold}, 0 0 0 6px ${BROCADE.black}`,
+                      boxShadow: `0 0 0 3px ${BROCADE.cream}, 0 0 0 6px ${BROCADE.black}`,
                     }}
                   >
                     {m.name.trim().split(/\s+/).pop()?.charAt(0)}
