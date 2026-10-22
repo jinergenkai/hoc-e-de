@@ -13,7 +13,7 @@
     "test": "vitest run",
     "electron": "electron .",
     "electron:dev": "ELECTRON_DEV_URL=http://localhost:5173 electron .",
-    "dist:win": "npm run build && electron-builder --win nsis portable",
+    "dist:win": "npm run build && electron-builder --win nsis portable --publish never",
     "prebuild": "node scripts/audio-manifest.mjs && node scripts/icons-subset.mjs",
     "predev": "node scripts/audio-manifest.mjs && node scripts/icons-subset.mjs"
   },
@@ -32,43 +32,44 @@
       "target": [
         "nsis",
         "portable"
-      ],
-      "artifactName": "HriamEde-${version}-${arch}-${target}.${ext}"
+      ]
     },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
-      "shortcutName": "Hriăm Êđê"
+      "shortcutName": "Hriăm Êđê",
+      "artifactName": "HriamEde-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "HriamEde-Portable-${version}.${ext}"
     }
   },
-  "dependencies": {
+  "devDependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fontsource-variable/dm-sans": "^5.3.0",
     "@fontsource/barlow": "^5.3.0",
     "@fontsource/noto-sans": "^5.3.0",
-    "@iconify/react": "^5.2.1",
-    "@mui/material": "^7.3.11",
-    "canvas-confetti": "^1.9.4",
-    "framer-motion": "^12.43.0",
-    "react": "^19.3.1",
-    "react-dom": "^19.3.1",
-    "react-router-dom": "^7.18.4",
-    "zustand": "^5.0.16"
-  },
-  "devDependencies": {
     "@iconify-json/solar": "^1.2.13",
+    "@iconify/react": "^5.2.1",
     "@iconify/utils": "^3.1.7",
+    "@mui/material": "^7.3.11",
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^22.20.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react-swc": "^3.11.0",
+    "canvas-confetti": "^1.9.4",
     "electron": "^45.0.0",
     "electron-builder": "^26.15.3",
+    "framer-motion": "^12.43.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router-dom": "^7.18.4",
     "typescript": "^5.9.3",
     "vite": "^6.4.5",
-    "vitest": "^3.2.7"
+    "vitest": "^3.2.7",
+    "zustand": "^5.0.16"
   },
   "author": "Hriam Ede"
 }
