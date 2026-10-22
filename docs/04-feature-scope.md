@@ -1,5 +1,7 @@
 # Giải thích tính năng & giới hạn phạm vi
 
+> **Lưu ý (bản 0.3, 22/10/2026):** ngân sách khách chốt **10 triệu** → phạm vi thực hiện xem `02-phases-pricing.md`. Tài liệu này giữ làm định hướng mở rộng.
+
 > Bản 0.2 — ứng dụng máy tính Electron, offline. Dùng khi ngồi với khách: mỗi tính năng ghi **người dùng thấy gì**, **trong giá có gì**, **ngoài giá là gì**. Điều gì không ghi trong "Bao gồm" thì coi là ngoài phạm vi.
 
 ## A. Quy tắc chung

@@ -1,90 +1,67 @@
 # Lộ trình triển khai & báo giá theo Phase
 
-> Bản 0.2 — ứng dụng máy tính Electron, offline. Đơn giá tham khảo thị trường freelance Việt Nam 2026, 1 dev + 0.3 designer.
-> Mỗi phase là **một biên bản nghiệm thu riêng**, khách dừng ở phase nào cũng có phần mềm chạy được.
+> Bản 0.3 · 22/10/2026 · **Ngân sách khách chốt: 10 triệu.** Phạm vi rút gọn còn đúng 3 thứ khách cần: học thẻ quẹt có chấm điểm, luyện dịch có chấm điểm, "dịch thông minh" (tra từ điển, không phải AI), giao diện vui mắt, chạy offline trên Windows.
+> Các tính năng khác trong `01-requirements.md` / `04-feature-scope.md` là **định hướng mở rộng**, báo giá riêng khi khách cần.
 
 ## Tổng quan
 
-| Phase | Tên | Thời gian | Báo giá (VNĐ) | Khách nhận được |
+| Phase | Nội dung | Thời gian | Giá | Thanh toán |
 |---|---|---|---|---|
-| 0 | Prototype | 1 tuần | 6 – 8 triệu | File `.exe` chạy thử: màn chính, học thẻ quẹt với 30–50 từ mẫu, 1 bài dịch từ có chấm điểm |
-| 1 | **Học** | 3 tuần | 22 – 28 triệu | Thẻ quẹt hoàn chỉnh, chi tiết từ, ghi âm, bảng chữ cái/vần, tra từ, nhập nội dung từ Excel |
-| 2 | **Luyện tập & chấm điểm** + hồ sơ | 3 tuần | 24 – 30 triệu | Dịch từ/câu 2 chiều có chấm, 5 dạng bài khác, bài kiểm tra, nhiều hồ sơ trên máy, tiến độ, huy hiệu, ôn tập |
-| 3 | Phân phối & quản trị | 1.5 tuần | 10 – 14 triệu | Bộ cài chính thức + bản portable, gói nội dung qua USB, sửa từ trong app, xuất điểm Excel, sao lưu |
-| | **Tổng gói chính (0–3)** | **~8.5 tuần** | **62 – 80 triệu** | |
-| 4 | AI khi có mạng (tuỳ chọn) | 2 tuần | 15 – 20 triệu | Chấm dịch theo nghĩa, hỏi đáp tra cứu |
-| 5 | Tuỳ chọn khác | báo giá riêng | | Bản macOS, tự động cập nhật qua mạng, mẫu câu giao tiếp, bản web/điện thoại dùng lại code |
+| 1 | **Bản nháp demo** — đã làm xong (xem bên dưới) | đã xong | 3 triệu | Khi khách chạy thử và đồng ý làm tiếp |
+| 2 | **Nội dung thật + âm thanh** + 1 vòng chỉnh giao diện | ~1,5 tuần sau khi nhận đủ dữ liệu | 4 triệu | Khi nghiệm thu Phase 2 |
+| 3 | **Đóng gói & bàn giao** | ~3 ngày | 3 triệu | Khi bàn giao bộ cài |
+| | **Tổng** | | **10 triệu** | |
 
-**Thanh toán mỗi phase:** tạm ứng 40% khi ký → 60% khi nghiệm thu. Phase sau chỉ bắt đầu khi phase trước thanh toán đủ.
-
-**Chi phí khác (khách tự trả, ngoài báo giá):**
-
-| Hạng mục | Bắt buộc? | Ước tính |
-|---|---|---|
-| Hosting / máy chủ | Không cần (app offline) | 0đ |
-| Phát hành qua Microsoft Store (Microsoft ký hộ, hết cảnh báo) | Khuyến nghị | Tài khoản cá nhân: 0đ · tài khoản tổ chức: ~99 USD một lần |
-| Chứng thư ký số OV cho bản `.exe` ngoài Store | Nếu phòng máy không dùng được Store | ~5 – 10 triệu/năm, cần giấy tờ pháp nhân/cá nhân |
-| Claude API + máy chủ trung gian (chỉ Phase 4) | Không | vài trăm nghìn – 1 triệu/tháng tuỳ lượng dùng; đặt trần chi tiêu |
-
-**Bảo trì sau bàn giao (tuỳ chọn):** 2 – 3 triệu/tháng (sửa lỗi, đóng gói nội dung mới ≤ 2 lần/tháng).
-
-**So với phương án web cũ:** bỏ hosting/đăng nhập online → rẻ hơn ~25 triệu và không tốn phí hàng tháng; đổi lại không đồng bộ giữa các máy, cập nhật nội dung phải chép file.
+Chi phí ngoài (khách tự trả nếu muốn): chữ ký số / Microsoft Store để hết cảnh báo Windows (xem `01-requirements.md` mục Rủi ro). Không có phí máy chủ hàng tháng.
 
 ---
 
-## Phase 0 — Prototype (1 tuần)
+## Phase 1 — Bản nháp demo (đã hoàn thành)
 
-- [ ] Chốt danh sách chủ đề, mẫu Excel nội dung, bảng chữ cái chuẩn, công thức điểm
-- [ ] Khung Electron + React + MUI + theme Minimal (màu thổ cẩm)
-- [ ] Màn chính, danh sách chủ đề, **học thẻ quẹt** đúng mô tả của khách (quẹt qua = thuộc, chưa thuộc = trộn lại)
-- [ ] 1 bài **dịch từ Việt ↔ Ê đê có chấm điểm** chạy thật
-- [ ] Thử font, thanh phím Ê đê, gõ cùng Unikey trên máy Windows thật
-- [ ] Xuất file `.exe` gửi khách
+Chạy được ngay, dữ liệu mẫu ~70 từ / 10 câu (chưa duyệt).
 
-**Nghiệm thu:** khách cài trên máy mình, bấm thử, duyệt giao diện bằng văn bản/tin nhắn.
+- [x] Giao diện theo Minimal UI: menu trái, thẻ bo góc, bóng mềm; màu đỏ – vàng – đen thổ cẩm, viền hoạ tiết thổ cẩm
+- [x] **Học thẻ quẹt có chấm điểm**: quẹt phải = thuộc (+10, đúng liên tiếp +5), quẹt trái = chưa thuộc (thẻ quay lại sau 3–5 thẻ); lật thẻ xem nghĩa, ví dụ, ghi chú; tổng kết + pháo giấy
+- [x] **Thử thách quẹt 60 giây**: từ Ê-đê + một nghĩa, quẹt Đúng/Sai; đúng liên tiếp nhân điểm x2, x3; lưu kỷ lục
+- [x] **Luyện dịch có chấm điểm**: Việt ↔ Ê-đê, dịch từ hoặc câu; Đúng / Gần đúng / Sai; tô màu từng từ; nhắc lỗi dấu thanh, thiếu dấu trăng, thiếu "ôh" trong câu phủ định; gợi ý (−3đ)
+- [x] **Dịch thông minh**: khớp câu mẫu trước, không có thì dịch theo cụm từ dài nhất + luật phủ định `amâo … ôh`; hiệu ứng "đang phân tích", hiện độ tin cậy và phân tích từng từ
+- [x] Bảng chữ cái 38 chữ (lọc nguyên âm / phụ âm / chữ riêng Ê-đê), từ điển tra không dấu
+- [x] Ô nhập có thanh phím Ê-đê + gõ tắt `chữ + 0` (b0 → ƀ)
+- [x] Điểm XP, chuỗi ngày học, mục tiêu ngày, cấp độ — lưu trên máy
+- [x] Nút nghe tự hiện khi có file âm thanh (chưa có thì hiện biểu tượng tắt tiếng)
+- [x] 17 kiểm thử tự động cho bộ chấm, bộ dịch và xử lý chữ Ê-đê
+- [x] GitHub Actions build file `.exe` Windows
 
-## Phase 1 — Học (3 tuần)
+## Phase 2 — Nội dung thật + âm thanh (4 triệu)
 
-- [ ] L-01 → L-07 (xem `01-requirements.md`)
-- [ ] Trình phát ghi âm, nút nghe chậm
-- [ ] Tra từ 2 chiều, không dấu, gợi ý gần đúng
-- [ ] Chế độ quản trị: nhập Excel từ vựng/câu/đáp án chấp nhận, nhập thư mục ghi âm (C-01 → C-03)
-- [ ] Phím tắt toàn app
+Khách gửi:
+1. File Excel theo mẫu: từ vựng (Ê-đê, nghĩa, từ loại, chủ đề, ghi chú) và câu (Ê-đê, tiếng Việt, các cách dịch đúng khác).
+2. Thư mục âm thanh, tên file = mã từ/mã câu (ví dụ `w001.mp3`, `s001.mp3`, `l-ƀ.mp3` cho chữ cái).
+3. Xác nhận: thứ tự chữ o/ô/ơ, bảng gõ tắt `chữ + 0`, ghi chú phát âm từng chữ cái.
 
-**Nghiệm thu:** khách tự nhập ≥ 300 từ qua Excel và học được bằng thẻ quẹt trên máy không có mạng.
+Bên mình làm:
+- [ ] Công cụ chuyển Excel → dữ liệu app (kiểm tra trùng mã, thiếu nghĩa, chuẩn hoá Unicode)
+- [ ] Nạp tối đa **500 từ + 100 câu**, gắn âm thanh
+- [ ] 1 vòng chỉnh giao diện / câu chữ theo góp ý
+- [ ] Bỏ nhãn "Dữ liệu mẫu" khi chuyên gia đã duyệt
 
-## Phase 2 — Luyện tập & chấm điểm (3 tuần)
+## Phase 3 — Đóng gói & bàn giao (3 triệu)
 
-- [ ] Bộ sinh câu hỏi + **bộ chấm điểm offline** (đúng / gần đúng / sai, tô màu từng từ cho dịch câu), có unit test
-- [ ] P-01 → P-07
-- [ ] Nút "Tôi đúng mà" lưu đề xuất đáp án
-- [ ] Hồ sơ nhiều người trên 1 máy, tiến độ, biểu đồ điểm, chuỗi ngày, huy hiệu, ôn tập ngắt quãng, xếp hạng trong máy (U-01 → U-05)
-
-**Nghiệm thu:** mỗi dạng bài chạy với ≥ 3 chủ đề; bộ 50 câu chấm mẫu do khách soạn cho kết quả khớp mong đợi ≥ 90%.
-
-## Phase 3 — Phân phối & quản trị (1.5 tuần)
-
-- [ ] Bộ cài `.exe` chính thức (biểu tượng, tên, gỡ cài đặt) + bản portable
-- [ ] Đóng gói bản Microsoft Store (MSIX) + nộp duyệt; ký số bản `.exe` nếu khách có chứng thư OV
-- [ ] Gói nội dung `.ede`: xuất từ máy người soạn, nhập trên máy khác (C-05)
-- [ ] Sửa/xoá từng từ trong app (C-04), duyệt đề xuất "Tôi đúng mà" (C-06)
-- [ ] Xuất kết quả học ra Excel (U-06), sao lưu/khôi phục tiến độ (U-07)
-- [ ] Tài liệu hướng dẫn cài đặt + quản trị, 1 buổi hướng dẫn online
-
-**Nghiệm thu:** cài sạch trên 2 máy Windows khác nhau; chuyển nội dung mới từ máy A sang máy B bằng USB thành công.
-
-## Phase 4 — AI khi có mạng (tuỳ chọn, 2 tuần)
-
-- [ ] Máy chủ trung gian nhỏ giữ khoá API (Vercel free hoặc tương đương), giới hạn số lượt
-- [ ] AI-01 chấm dịch theo nghĩa, AI-02 hỏi đáp dựa trên từ điển, AI-03 gợi ý đáp án chấp nhận
-- [ ] Tự ẩn khi mất mạng
+- [ ] Bộ cài `.exe` + bản portable (chạy từ USB), tên, biểu tượng
+- [ ] Hướng dẫn cài (kèm cách bấm "Vẫn chạy" khi Windows cảnh báo)
+- [ ] Bàn giao mã nguồn + hướng dẫn cập nhật nội dung
+- [ ] Bảo hành 30 ngày: sửa lỗi so với bản đã nghiệm thu
 
 ---
 
-## Gợi ý đàm phán
+## Không nằm trong 10 triệu (báo giá riêng nếu cần)
 
-1. Phase 0 là phase "bán hàng": khách cài và bấm thử trên máy thật thì dễ chốt Phase 1–2.
-2. Gói 0–3 ký một lần → có thể giảm ~10%.
-3. Thay đổi phạm vi giữa phase: 250 – 400k/giờ, báo trước khi làm.
-4. Tiến độ tính từ ngày nhận đủ nội dung (mục 6 của `01-requirements.md`).
-5. Bàn giao mã nguồn khi thanh toán đủ phase cuối khách chọn.
+| Hạng mục | Ghi chú |
+|---|---|
+| Nhập liệu trong app (màn quản trị) | Phase 2 dùng file Excel do bên mình nạp |
+| Nhiều hồ sơ người học trên 1 máy, xuất điểm Excel | Hiện là 1 người dùng / máy |
+| Microsoft Store, chữ ký số | Chi phí và thủ tục riêng |
+| AI thật (Claude) để chấm/dịch theo nghĩa | Cần mạng + phí API |
+| Thêm từ vượt 500 từ / 100 câu, cắt ghi âm hộ | Tính theo khối lượng |
+| macOS, điện thoại, web | Code React dùng lại được phần lớn |
+| Vòng sửa giao diện thứ 2 trở đi | Tính theo giờ |

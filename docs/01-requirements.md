@@ -1,5 +1,7 @@
 # Học tiếng Ê đê — Đặc tả yêu cầu (SRS)
 
+> **Lưu ý (bản 0.3, 22/10/2026):** ngân sách khách chốt **10 triệu** → phạm vi thực hiện xem `02-phases-pricing.md`. Tài liệu này giữ làm định hướng mở rộng.
+
 > Phiên bản 0.2 · 22/10/2026 · **Đổi hướng theo phản hồi khách**: ứng dụng cài trên máy tính (Electron), chạy **không cần mạng**, trọng tâm là *học thẻ quẹt* và *dịch 2 chiều có chấm điểm*.
 > Bản 0.1 (web + Vercel) đã bỏ; xem lịch sử git nếu cần.
 
