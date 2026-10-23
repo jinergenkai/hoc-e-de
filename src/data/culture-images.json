@@ -1,1 +1,31 @@
-{}
+{
+  "cong-chieng": [
+    "culture/cong-chieng/7pha2.jpg",
+    "culture/cong-chieng/images.jpg"
+  ],
+  "ghe-kpan": [
+    "culture/ghe-kpan/images.jpg",
+    "culture/ghe-kpan/za23-9156.webp"
+  ],
+  "le-hoi": [
+    "culture/le-hoi/5.65.jpg",
+    "culture/le-hoi/anh-1-1.jpg",
+    "culture/le-hoi/IMG_1961.jpg"
+  ],
+  "mau-he": [
+    "culture/mau-he/z4089886364648_b3a1f06de1ab30f665c3a29dcfd496ae.jpg"
+  ],
+  "nha-dai": [
+    "culture/nha-dai/nha_dai2.jpg",
+    "culture/nha-dai/nha-dai-1.webp"
+  ],
+  "ruou-can": [
+    "culture/ruou-can/DSC_0328-e3abc.webp",
+    "culture/ruou-can/images (1).jpg"
+  ],
+  "tho-cam": [
+    "culture/tho-cam/520260403234948.jpg",
+    "culture/tho-cam/cc864caccd7b43251a6a.jpg",
+    "culture/tho-cam/images (1).jpg"
+  ]
+}
