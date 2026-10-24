@@ -1,7 +1,7 @@
 // POST /api/upload?id=w001  (body = raw audio). A new take replaces the item's previous one.
 import { put, del } from '@vercel/blob';
 
-import { json, ID_RE, recPath, listAll, encodeKey, extOfMime } from './_lib';
+import { json, ID_RE, recPath, listAll, encodeKey, extOfMime } from './_lib.js';
 
 const MAX_BYTES = 2 * 1024 * 1024; // a 12 s clip is ~100–200 KB; Vercel's body cap is 4.5 MB
 

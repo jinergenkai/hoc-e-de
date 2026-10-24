@@ -1,7 +1,7 @@
 // GET /api/config → which features are visible (public)   ·   PUT /api/config (admin) saves them
 import { get, put } from '@vercel/blob';
 
-import { json, isAdmin } from './_lib';
+import { json, isAdmin } from './_lib.js';
 
 const PATH = 'config/features.json';
 

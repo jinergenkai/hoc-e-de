@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import { encodeKey, decodeKey, parseRec, recPath, ID_RE, extOfMime } from './_lib';
+import { encodeKey, decodeKey, parseRec, recPath, ID_RE, extOfMime } from './_lib.js';
 
 describe('api helpers', () => {
   it('round-trips Ê-đê letters through blob-safe keys', () => {
