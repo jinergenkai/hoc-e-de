@@ -19,20 +19,18 @@ npm run dist:win       # đóng gói .exe (chạy trên Windows)
 Mỗi lần đẩy lên nhánh `master`, GitHub Actions build file `.exe` đầy đủ (tab **Actions → Build Windows app → Artifacts**).
 Muốn build bản theo đợt (chỉ mở một phần tính năng, có nhãn xem trước, có hạn dùng): **Run workflow** và nhập đợt — xem [docs/06](docs/06-releases-roadmap.md).
 
-## Thu âm từ xa & ẩn/hiện tính năng (Vercel)
+## Ghi âm qua mạng & ẩn/hiện tính năng (bản Vercel)
 
-Bản đưa lên Vercel có thêm hai trang (bản cài Windows không có):
+**Ghi âm:** ai mở `https://<tên-miền>/#/recording` cũng ghi được (điện thoại hay máy tính, không cần mã). Bấm micro, đọc, **Lưu** → bản ghi tự gửi lên máy chủ (mất mạng thì tự gửi lại sau). Mỗi mục giữ bản ghi mới nhất, tối đa 12 giây / 2 MB. Ở nhà mở cùng trang, bấm **Tải gói từ máy chủ** → giải nén vào `public/audio/` → build lại là bản offline có giọng.
 
-- **`/#/thu-am`** — người Ê-đê mở link trên điện thoại, đọc từng từ/câu/chữ cái. Bản ghi lưu trên máy rồi tự gửi lên (mất mạng thì chờ, có nút **Gửi lại**).
-- **`/#/quan-tri`** — đăng nhập bằng mật khẩu quản trị: nghe và **Duyệt/Xoá** bản ghi, copy link mời, **Tải gói đã duyệt (.zip)** (file tên theo mã `w001.webm`…; giải nén vào `public/audio/` rồi build lại là thẻ có giọng cứng), và tab **Tính năng hiển thị** để bật/tắt từng tab (hiện dần theo đợt; tắt "Sắp ra mắt" thì tab chưa mở bị ẩn hẳn).
+**Ẩn/hiện tính năng:** mở `https://<tên-miền>/#/quan-tri`, tick tính năng muốn cho khách thấy (hoặc "Đến đợt N"), nhập mật khẩu, **Lưu**. Mọi máy mở lại app sẽ chỉ thấy các tab đó — dùng để demo dần cho khách. Trang Ghi âm luôn vào được bằng link dù đang ẩn khỏi menu.
 
 Cài đặt một lần trên Vercel:
 
 1. Project → **Storage → Create → Blob**, chọn **Private**, nối vào project (tự có `BLOB_READ_WRITE_TOKEN`).
-2. Project → **Settings → Environment Variables**: thêm `ADMIN_PASSWORD` (mật khẩu trang quản trị) và `RECORDER_CODE` (mã mời, một chuỗi khó đoán). Deploy lại.
-3. Mở `https://<tên-miền>/#/quan-tri`, đăng nhập, copy link mời gửi cho người đọc.
+2. **Settings → Environment Variables**: thêm `ADMIN_PASSWORD` (mật khẩu trang cài đặt). Deploy lại.
 
-Chạy thử cả API trên máy: `npx vercel dev` (cần `vercel link` và `vercel env pull`). `npm run dev` chỉ chạy giao diện, các trang này sẽ không gọi được máy chủ.
+`npm run dev` chỉ chạy giao diện; muốn chạy cả máy chủ trên máy dùng `npx vercel dev`.
 
 ## Thêm âm thanh
 

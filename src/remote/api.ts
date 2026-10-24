@@ -7,41 +7,25 @@ export const REMOTE_AVAILABLE = typeof location !== 'undefined' && /^https?:$/.t
 
 const API = (import.meta.env.VITE_API_BASE as string | undefined) ?? '';
 
-export type RemoteEntry = { pathname: string; id: string; who: string; ext: string; size: number; at: string; status: 'pending' | 'approved' };
+export type ServerRecording = { pathname: string; id: string; ext: string; size: number; at: string };
 
-const safe = (fn: () => string | null) => {
-  try {
-    return fn();
-  } catch {
-    return null;
-  }
-};
-const store = (kind: 'local' | 'session', key: string, value?: string | null) => {
-  const s = kind === 'local' ? localStorage : sessionStorage;
-  return safe(() => {
-    if (value === undefined) return s.getItem(key);
-    if (value === null) s.removeItem(key);
-    else s.setItem(key, value);
-    return value;
-  });
-};
-
-// ---- credentials -----------------------------------------------------
-
-export const recorderCode = {
-  get: () => store('local', 'hriam-recorder-code') ?? '',
-  set: (v: string) => store('local', 'hriam-recorder-code', v),
-};
-export const recorderName = {
-  get: () => store('local', 'hriam-recorder-name') ?? '',
-  set: (v: string) => store('local', 'hriam-recorder-name', v),
-};
+/** Admin password for changing settings; kept for the browser tab only. */
 export const adminPassword = {
-  get: () => store('session', 'hriam-admin-password') ?? '',
-  set: (v: string | null) => store('session', 'hriam-admin-password', v),
+  get: () => {
+    try {
+      return sessionStorage.getItem('hriam-admin-password') ?? '';
+    } catch {
+      return '';
+    }
+  },
+  set: (v: string) => {
+    try {
+      sessionStorage.setItem('hriam-admin-password', v);
+    } catch {
+      /* storage unavailable */
+    }
+  },
 };
-
-// ---- calls -----------------------------------------------------------
 
 async function call(path: string, init: RequestInit & { timeoutMs?: number } = {}) {
   const ctl = new AbortController();
@@ -53,11 +37,9 @@ async function call(path: string, init: RequestInit & { timeoutMs?: number } = {
   }
 }
 
-const adminHeaders = (extra: Record<string, string> = {}) => ({ authorization: `Bearer ${adminPassword.get()}`, ...extra });
-
 async function jsonOrThrow<T>(res: Response): Promise<T> {
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw Object.assign(new Error((data as { error?: string }).error ?? `Lỗi ${res.status}`), { status: res.status });
+  const data = await res.json().catch(() => null);
+  if (!res.ok || data === null) throw Object.assign(new Error((data as { error?: string } | null)?.error ?? `Lỗi ${res.status}`), { status: res.status });
   return data as T;
 }
 
@@ -72,36 +54,29 @@ export async function fetchFlags(): Promise<FlagsConfig | null> {
 }
 
 export async function saveFlags(cfg: FlagsConfig) {
-  return jsonOrThrow<FlagsConfig>(await call('/api/config', { method: 'PUT', headers: adminHeaders({ 'content-type': 'application/json' }), body: JSON.stringify(cfg) }));
+  const res = await call('/api/config', {
+    method: 'PUT',
+    headers: { authorization: `Bearer ${adminPassword.get()}`, 'content-type': 'application/json' },
+    body: JSON.stringify(cfg),
+  });
+  return jsonOrThrow<FlagsConfig>(res);
 }
 
-export async function uploadTake(id: string, who: string, blob: Blob) {
-  const res = await call(`/api/upload?id=${encodeURIComponent(id)}&who=${encodeURIComponent(who)}`, {
+export async function uploadTake(id: string, blob: Blob) {
+  const res = await call(`/api/upload?id=${encodeURIComponent(id)}`, {
     method: 'POST',
-    headers: { 'x-recorder-code': recorderCode.get(), 'content-type': blob.type.split(';')[0] || 'audio/webm' },
+    headers: { 'content-type': blob.type.split(';')[0] || 'audio/webm' },
     body: blob,
   });
   return jsonOrThrow<{ ok: true }>(res);
 }
 
-/** Item ids that already have a submission (any status). */
-export async function fetchSubmittedIds() {
-  const res = await call('/api/recordings', { headers: { 'x-recorder-code': recorderCode.get() }, cache: 'no-store', timeoutMs: 10_000 });
-  return (await jsonOrThrow<{ ids: string[] }>(res)).ids;
-}
-
-export async function fetchEntries() {
-  return jsonOrThrow<{ entries: RemoteEntry[]; recorderCode: string }>(await call('/api/recordings', { headers: adminHeaders(), cache: 'no-store' }));
-}
-
-export async function review(action: 'approve' | 'delete', pathname: string) {
-  return jsonOrThrow<{ ok: true }>(
-    await call('/api/review', { method: 'POST', headers: adminHeaders({ 'content-type': 'application/json' }), body: JSON.stringify({ action, pathname }) })
-  );
+export async function fetchServerRecordings() {
+  return (await jsonOrThrow<{ entries: ServerRecording[] }>(await call('/api/recordings', { cache: 'no-store', timeoutMs: 10_000 }))).entries;
 }
 
 export async function fetchFile(pathname: string) {
-  const res = await call(`/api/file?p=${encodeURIComponent(pathname)}`, { headers: adminHeaders() });
+  const res = await call(`/api/file?p=${encodeURIComponent(pathname)}`);
   if (!res.ok) throw new Error(`Không tải được ${pathname}`);
   return res.blob();
 }

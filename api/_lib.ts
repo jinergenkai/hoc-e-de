@@ -5,24 +5,14 @@ import { list } from '@vercel/blob';
 export const json = (data: unknown, status = 200) =>
   new Response(JSON.stringify(data), { status, headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
 
-const same = (a: string, b: string) => {
-  const x = Buffer.from(a);
-  const y = Buffer.from(b);
-  return x.length === y.length && timingSafeEqual(x, y);
-};
-
-/** Admin = whoever knows ADMIN_PASSWORD (sent as Authorization: Bearer ...). */
+/** Admin = whoever knows ADMIN_PASSWORD (sent as Authorization: Bearer ...). Only needed to change settings. */
 export function isAdmin(req: Request) {
   const pw = process.env.ADMIN_PASSWORD;
   const got = (req.headers.get('authorization') ?? '').replace(/^Bearer\s+/i, '');
-  return Boolean(pw && got && same(got, pw));
-}
-
-/** Recorder = whoever has the invite code (RECORDER_CODE) in the x-recorder-code header; admins pass too. */
-export function isRecorder(req: Request) {
-  const code = process.env.RECORDER_CODE;
-  const got = req.headers.get('x-recorder-code') ?? '';
-  return isAdmin(req) || Boolean(code && got && same(got, code));
+  if (!pw || !got) return false;
+  const x = Buffer.from(got);
+  const y = Buffer.from(pw);
+  return x.length === y.length && timingSafeEqual(x, y);
 }
 
 // Ids contain Ê-đê letters (l-ƀ); keep blob paths ASCII-safe and reversible.
@@ -42,6 +32,16 @@ const EXT: Record<string, string> = {
 export const extOfMime = (ct: string) => EXT[ct.split(';')[0].trim().toLowerCase()];
 export const mimeOfExt = (ext: string) => Object.entries(EXT).find(([, e]) => e === ext)?.[0] ?? 'application/octet-stream';
 
+/** One recording per item: rec/<id>.<ext> */
+export const recPath = (id: string, ext: string) => `rec/${encodeKey(id)}.${ext}`;
+
+export type RecEntry = { pathname: string; id: string; ext: string; size: number; at: string };
+
+export function parseRec(b: { pathname: string; size: number; uploadedAt: Date }): RecEntry | null {
+  const m = /^rec\/([^/]+)\.([a-z0-9]+)$/.exec(b.pathname);
+  return m ? { pathname: b.pathname, id: decodeKey(m[1]), ext: m[2], size: b.size, at: b.uploadedAt.toISOString() } : null;
+}
+
 export async function listAll(prefix: string) {
   const out: Awaited<ReturnType<typeof list>>['blobs'] = [];
   let cursor: string | undefined;
@@ -51,26 +51,4 @@ export async function listAll(prefix: string) {
     cursor = page.hasMore ? page.cursor : undefined;
   } while (cursor);
   return out;
-}
-
-export type Entry = { pathname: string; id: string; who: string; ext: string; size: number; at: string; status: 'pending' | 'approved' };
-
-/**
- * pending/<id>/<time>-<who>-<random>.<ext>   ·   approved/<id>__<who>.<ext>
- * (the random part is added by the blob store; it is stripped from the name shown)
- */
-export function parseEntry(b: { pathname: string; size: number; uploadedAt: Date }): Entry | null {
-  const m = /^(pending|approved)\/(.+)\.([a-z0-9]+)$/.exec(b.pathname);
-  if (!m) return null;
-  const [, status, rest, ext] = m;
-  let idPart: string;
-  let whoPart: string;
-  if (status === 'pending') {
-    const [dir, file = ''] = rest.split('/');
-    idPart = dir;
-    whoPart = file.replace(/^\d+-/, '').replace(/-[A-Za-z0-9]{6,}$/, '');
-  } else {
-    [idPart, whoPart = ''] = rest.split('__');
-  }
-  return { pathname: b.pathname, id: decodeKey(idPart), who: decodeKey(whoPart), ext, size: b.size, at: b.uploadedAt.toISOString(), status: status as Entry['status'] };
 }

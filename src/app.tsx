@@ -13,7 +13,6 @@ import { EXPIRES, RELEASE, RELEASES, isExpired, isEnabled, IS_PREVIEW } from 'sr
 
 import { HomePage } from 'src/sections/home';
 import { AdminPage } from 'src/sections/admin';
-import { RemoteRecordPage } from 'src/sections/remote-record';
 import { AboutPage } from 'src/sections/about';
 import { CulturePage } from 'src/sections/culture';
 import { CertificatePage } from 'src/sections/certificate';
@@ -73,10 +72,15 @@ function PreviewBadge() {
 
 // Hash routing: the built app is loaded from file:// inside Electron.
 const router = createHashRouter([
-  // Phone recording page for invited native speakers: standalone, no profile picker or menu
-  { path: '/thu-am', element: <RemoteRecordPage /> },
-  // Admin sits outside the profile picker / expiry gate: it must stay reachable whatever is hidden
-  { element: <DashboardLayout />, children: [{ path: '/quan-tri', element: <AdminPage /> }] },
+  // Recording and settings skip the profile picker and are reachable by link even while hidden
+  // from the menu, so speakers can record and the admin can change settings during the demo
+  {
+    element: <DashboardLayout />,
+    children: [
+      { path: '/recording', element: <RecordingStudioPage /> },
+      { path: '/quan-tri', element: <AdminPage /> },
+    ],
+  },
   {
     element: <Root />,
     children: [
@@ -96,7 +100,6 @@ const router = createHashRouter([
           { path: '/dictionary', element: <Gate feature="dictionary"><DictionaryPage /></Gate> },
           { path: '/culture', element: <Gate feature="culture"><CulturePage /></Gate> },
           { path: '/certificate', element: <Gate feature="certificate"><CertificatePage /></Gate> },
-          { path: '/recording', element: <Gate feature="recording"><RecordingStudioPage /></Gate> },
           { path: '/about', element: <AboutPage /> },
           { path: '*', element: <Navigate to="/" replace /> },
         ],

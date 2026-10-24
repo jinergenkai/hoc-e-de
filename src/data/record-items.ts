@@ -12,5 +12,3 @@ export const RECORD_ITEMS: Record<RecordKind, RecordItem[]> = {
 };
 
 export const RECORD_TAB_LABEL: Record<RecordKind, string> = { word: 'Từ vựng', sentence: 'Câu', letter: 'Chữ cái' };
-
-export const itemById = (id: string) => Object.values(RECORD_ITEMS).flat().find((i) => i.id === id);

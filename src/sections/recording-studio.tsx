@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import Box from '@mui/material/Box';
@@ -12,7 +11,6 @@ import Alert from '@mui/material/Alert';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Divider from '@mui/material/Divider';
-import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -20,10 +18,10 @@ import { alpha } from '@mui/material/styles';
 
 import audioManifest from 'src/data/audio-manifest.json';
 import { RECORD_ITEMS, RECORD_TAB_LABEL, type RecordKind, type RecordItem } from 'src/data/record-items';
-import { REMOTE_AVAILABLE } from 'src/remote/api';
+import { useCloud } from 'src/store/cloud';
 import { useRecordings } from 'src/store/recordings';
+import { fetchFile, REMOTE_AVAILABLE } from 'src/remote/api';
 import { playBlob, useRecorder } from 'src/hooks/use-recorder';
-import { unlockAdmin, isAdminUnlocked } from 'src/config/admin';
 
 import { Iconify } from 'src/components/iconify';
 import { BrocadeBand } from 'src/components/ornaments';
@@ -35,51 +33,10 @@ type Item = RecordItem;
 const ITEMS = RECORD_ITEMS;
 const TAB_LABEL = RECORD_TAB_LABEL;
 const bundled = audioManifest as Record<string, string>;
+const STATUS_LABEL = { recorded: 'Đã ghi', server: 'Có trên máy chủ', bundled: 'Có sẵn', none: 'Chưa có' };
 
 export function RecordingStudioPage() {
-  const [unlocked, setUnlocked] = useState(isAdminUnlocked);
-  if (!unlocked) return <PinGate onUnlock={() => setUnlocked(true)} />;
   return <Studio />;
-}
-
-// ----------------------------------------------------------------------
-
-function PinGate({ onUnlock }: { onUnlock: () => void }) {
-  const [pin, setPin] = useState('');
-  const [error, setError] = useState(false);
-  const submit = () => (unlockAdmin(pin) ? onUnlock() : setError(true));
-  return (
-    <Stack alignItems="center" sx={{ pt: 8 }}>
-      <Card sx={{ width: 380, overflow: 'hidden' }}>
-        <BrocadeBand motif="sleeve" height={14} />
-        <Stack spacing={2} alignItems="center" sx={{ p: 4 }}>
-          <Iconify icon="solar:lock-keyhole-bold-duotone" width={48} sx={{ color: 'primary.main' }} />
-          <Typography variant="h6">Khu vực người soạn nội dung</Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center' }}>
-            Nhập mã PIN để ghi âm từ vựng, câu và chữ cái.
-          </Typography>
-          <TextField
-            autoFocus
-            fullWidth
-            type="password"
-            label="Mã PIN"
-            value={pin}
-            error={error}
-            helperText={error ? 'Mã PIN không đúng' : ' '}
-            onChange={(e) => {
-              setPin(e.target.value);
-              setError(false);
-            }}
-            onKeyDown={(e) => e.key === 'Enter' && submit()}
-            slotProps={{ htmlInput: { inputMode: 'numeric', maxLength: 8, style: { letterSpacing: 8, textAlign: 'center', fontSize: 22 } } }}
-          />
-          <Button fullWidth size="large" variant="contained" onClick={submit}>
-            Mở khoá
-          </Button>
-        </Stack>
-      </Card>
-    </Stack>
-  );
 }
 
 // ----------------------------------------------------------------------
@@ -92,20 +49,47 @@ function Studio() {
   const [session, setSession] = useState<{ list: Item[]; index: number } | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-  const navigate = useNavigate();
+  const cloud = useCloud();
+  const [zipping, setZipping] = useState(false);
 
-  const status = (id: string) => (ids.has(id) ? 'recorded' : bundled[id] ? 'bundled' : 'none');
+  useEffect(() => {
+    void useCloud.getState().load();
+  }, []);
+
+  // 'recorded' = on this computer, 'server' = only on the server (recorded elsewhere), 'bundled' = in public/audio
+  const status = (id: string) => (ids.has(id) ? 'recorded' : cloud.serverIds.has(id) ? 'server' : bundled[id] ? 'bundled' : 'none');
+
+  const play = async (id: string) => {
+    if (status(id) !== 'server') return playAudio(id);
+    const entry = cloud.server.find((e) => e.id === id);
+    if (entry) playBlob(await fetchFile(entry.pathname));
+  };
+
+  const download = (blob: Blob, name: string) => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  };
+
+  const downloadServer = async () => {
+    setZipping(true);
+    try {
+      download(await cloud.downloadZip(), `ghi-am-may-chu-${new Date().toISOString().slice(0, 10)}.zip`);
+      setNotice('Đã tải gói từ máy chủ. Giải nén vào public/audio/ rồi build lại để bản cài offline có giọng.');
+    } catch {
+      setNotice('Không tải được gói từ máy chủ. Thử lại sau.');
+    } finally {
+      setZipping(false);
+    }
+  };
   const items = ITEMS[kind];
   const shown = onlyMissing ? items.filter((i) => status(i.id) === 'none') : items;
   const done = items.filter((i) => status(i.id) !== 'none').length;
 
   const exportAll = async () => {
-    const blob = await exportZip();
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `ghi-am-hriam-ede-${new Date().toISOString().slice(0, 10)}.zip`;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+    download(await exportZip(), `ghi-am-hriam-ede-${new Date().toISOString().slice(0, 10)}.zip`);
   };
 
   const importFile = async (file: File) => {
@@ -128,12 +112,16 @@ function Studio() {
     <>
       <PageTitle
         title="Ghi âm nội dung"
-        subtitle="Người bản ngữ ghi âm từng từ, câu và chữ cái. Ghi âm lưu ngay trên máy và dùng cho nút nghe trong toàn bộ ứng dụng."
+        subtitle={
+          REMOTE_AVAILABLE
+            ? 'Bấm micro, đọc, rồi Lưu. Bản ghi tự gửi lên máy chủ để tải về làm giọng cho bản offline.'
+            : 'Người bản ngữ ghi âm từng từ, câu và chữ cái. Ghi âm lưu ngay trên máy và dùng cho nút nghe trong toàn bộ ứng dụng.'
+        }
         action={
           <Stack direction="row" spacing={1}>
             {REMOTE_AVAILABLE && (
-              <Button color="inherit" variant="outlined" onClick={() => navigate('/quan-tri')} startIcon={<Iconify icon="solar:cloud-upload-bold-duotone" />}>
-                Thu âm từ xa
+              <Button variant="contained" onClick={downloadServer} disabled={zipping || cloud.server.length === 0} startIcon={<Iconify icon="solar:cloud-download-bold-duotone" />}>
+                {zipping ? 'Đang gom file…' : `Tải gói từ máy chủ (${cloud.server.length})`}
               </Button>
             )}
             <Button color="inherit" variant="outlined" onClick={() => fileRef.current?.click()} startIcon={<Iconify icon="solar:upload-bold-duotone" />}>
@@ -156,6 +144,20 @@ function Studio() {
           </Stack>
         }
       />
+
+      {REMOTE_AVAILABLE && (cloud.queued.length > 0 || cloud.error) && (
+        <Alert
+          severity={cloud.error ? 'warning' : 'info'}
+          sx={{ mb: 3 }}
+          action={
+            <Button color="inherit" size="small" disabled={cloud.sending} onClick={() => void cloud.flush()}>
+              Gửi lại
+            </Button>
+          }
+        >
+          {cloud.sending ? `Đang gửi ${cloud.queued.length} bản ghi lên máy chủ…` : `${cloud.queued.length} bản ghi chưa gửi được lên máy chủ. ${cloud.error ?? ''}`}
+        </Alert>
+      )}
 
       {notice && (
         <Alert severity="info" onClose={() => setNotice(null)} sx={{ mb: 3 }}>
@@ -209,11 +211,11 @@ function Studio() {
                 </Typography>
                 <Chip
                   size="small"
-                  color={st === 'recorded' ? 'success' : st === 'bundled' ? 'info' : 'default'}
+                  color={st === 'recorded' || st === 'server' ? 'success' : st === 'bundled' ? 'info' : 'default'}
                   variant={st === 'none' ? 'outlined' : 'filled'}
-                  label={st === 'recorded' ? 'Đã ghi' : st === 'bundled' ? 'Có sẵn' : 'Chưa có'}
+                  label={STATUS_LABEL[st]}
                 />
-                <IconButton disabled={st === 'none'} onClick={() => playAudio(item.id)} title="Nghe">
+                <IconButton disabled={st === 'none'} onClick={() => void play(item.id)} title="Nghe">
                   <Iconify icon="solar:play-circle-bold-duotone" width={24} />
                 </IconButton>
                 <IconButton color="primary" onClick={() => startSession(item.id)} title="Ghi âm">
@@ -238,7 +240,7 @@ function Studio() {
       </Card>
 
       <Typography variant="caption" sx={{ display: 'block', mt: 2, color: 'text.disabled' }}>
-        Gói ghi âm (.zip) dùng để chép sang máy khác qua USB, hoặc gửi cho nhóm phát triển đóng gói vào bản cài.
+        Nhập/Xuất gói (.zip) dùng để chép ghi âm sang máy khác qua USB khi không có mạng.
       </Typography>
 
       <Dialog open={Boolean(session)} onClose={() => setSession(null)} maxWidth="md" fullWidth>
@@ -257,6 +259,7 @@ function StudioSession({ list, start, onClose }: { list: Item[]; start: number; 
   const [saved, setSaved] = useState(0);
   const rec = useRecorder({ maxMs: 12_000 });
   const save = useRecordings((s) => s.save);
+  const queue = useCloud((s) => s.queue);
   const hasExisting = useRecordings((s) => s.ids.has(list[index]?.id ?? ''));
   const item = list[index];
   const err = micErrorText(rec.state);
@@ -289,6 +292,7 @@ function StudioSession({ list, start, onClose }: { list: Item[]; start: number; 
   const commit = useCallback(async () => {
     if (!take || !item) return;
     await save(item.id, take);
+    void queue(item.id, take); // web version: also send to the server
     setSaved((n) => n + 1);
     go(index + 1);
   }, [take, item, save, go, index]);
