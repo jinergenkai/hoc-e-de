@@ -94,6 +94,14 @@ const secondaryFont = 'Barlow, "Noto Sans", sans-serif';
 // Ê-đê text uses Noto Sans: it covers ƀ Ƀ č ñ and stacks the combining breve correctly.
 export const radeFont = '"Noto Sans", sans-serif';
 
+// Same idea as Minimal UI's responsiveFontSizes: headings start smaller on phones and grow at sm / md
+const rem = (px: number) => `${px / 16}rem`;
+const responsive = (xs: number, sm: number, md: number) => ({
+  fontSize: rem(xs),
+  '@media (min-width:600px)': { fontSize: rem(sm) },
+  '@media (min-width:900px)': { fontSize: rem(md) },
+});
+
 const theme = createTheme({
   palette: {
     ...palette,
@@ -107,11 +115,11 @@ const theme = createTheme({
   customShadows,
   typography: {
     fontFamily: primaryFont,
-    h1: { fontFamily: secondaryFont, fontWeight: 800, fontSize: '3.5rem', lineHeight: 1.25 },
-    h2: { fontFamily: secondaryFont, fontWeight: 800, fontSize: '2.75rem', lineHeight: 1.33 },
-    h3: { fontFamily: secondaryFont, fontWeight: 700, fontSize: '2rem', lineHeight: 1.5 },
-    h4: { fontWeight: 700, fontSize: '1.5rem', lineHeight: 1.5 },
-    h5: { fontWeight: 700, fontSize: '1.1875rem', lineHeight: 1.5 },
+    h1: { fontFamily: secondaryFont, fontWeight: 800, lineHeight: 1.25, ...responsive(36, 48, 56) },
+    h2: { fontFamily: secondaryFont, fontWeight: 800, lineHeight: 1.33, ...responsive(28, 36, 44) },
+    h3: { fontFamily: secondaryFont, fontWeight: 700, lineHeight: 1.5, ...responsive(24, 28, 32) },
+    h4: { fontWeight: 700, lineHeight: 1.5, ...responsive(20, 22, 24) },
+    h5: { fontWeight: 700, lineHeight: 1.5, ...responsive(18, 19, 19) },
     h6: { fontWeight: 600, fontSize: '1.0625rem', lineHeight: 1.55 },
     subtitle1: { fontWeight: 600, fontSize: '1rem', lineHeight: 1.5 },
     subtitle2: { fontWeight: 600, fontSize: '0.875rem', lineHeight: 1.57 },

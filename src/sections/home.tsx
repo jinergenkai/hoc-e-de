@@ -34,7 +34,7 @@ export function HomePage() {
     <Stack spacing={4}>
       <Hero onLearn={() => navigate('/learn')} onSecond={() => navigate(isEnabled('challenge') ? '/challenge/all' : '/alphabet')} />
 
-      <Grid container spacing={3}>
+      <Grid container spacing={{ xs: 2, md: 3 }}>
         <Stat title="Từ đã thuộc" value={`${knownCount}/${words.length}`} icon="solar:card-2-bold-duotone" color="primary" />
         {isEnabled('gamification') ? (
           <>
@@ -86,7 +86,7 @@ function Hero({ onLearn, onSecond }: { onLearn: () => void; onSecond: () => void
       <BrocadeBand motif="sleeve" height={14} />
       <Pompom size={18} sx={{ position: 'absolute', top: 6, left: 28, zIndex: 2 }} />
       <Pompom size={18} sx={{ position: 'absolute', top: 6, right: 28, zIndex: 2 }} />
-      <Stack direction="row" alignItems="center" sx={{ p: { xs: 4, md: 5 }, position: 'relative' }}>
+      <Stack direction="row" alignItems="center" sx={{ p: { xs: 3, sm: 4, md: 5 }, position: 'relative' }}>
         <Box sx={{ maxWidth: 560, position: 'relative', zIndex: 1 }}>
           <Typography variant="overline" sx={{ opacity: 0.72 }}>
             Hriăm klei Êđê
@@ -97,7 +97,7 @@ function Hero({ onLearn, onSecond }: { onLearn: () => void; onSecond: () => void
           <Typography sx={{ opacity: 0.8, mb: 3 }}>
             Quẹt thẻ để nhớ từ, luyện dịch có chấm điểm ngay, không cần mạng.
           </Typography>
-          <Stack direction="row" spacing={1.5}>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ '& .MuiButton-root': { whiteSpace: 'nowrap' } }}>
             <Button size="large" variant="contained" color="secondary" onClick={onLearn} startIcon={<Iconify icon="solar:card-2-bold-duotone" />}>
               Học thẻ ngay
             </Button>
@@ -161,12 +161,14 @@ type StatProps = { title: string; value: string; icon: string; color: 'primary' 
 
 function Stat({ title, value, icon, color }: StatProps) {
   return (
-    <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-      <Card sx={{ p: 3, display: 'flex', alignItems: 'center', gap: 2.5 }}>
+    <Grid size={{ xs: 6, lg: 3 }}>
+      {/* Phones: two compact tiles per row, icon above the number */}
+      <Card sx={{ p: { xs: 2, sm: 3 }, height: 1, display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'flex-start', sm: 'center' }, gap: { xs: 1.5, sm: 2.5 } }}>
         <Box
           sx={{
-            width: 56,
-            height: 56,
+            flexShrink: 0,
+            width: { xs: 44, sm: 56 },
+            height: { xs: 44, sm: 56 },
             borderRadius: 2,
             display: 'grid',
             placeItems: 'center',
@@ -174,9 +176,9 @@ function Stat({ title, value, icon, color }: StatProps) {
             bgcolor: (t) => alpha(t.palette[color].main, 0.12),
           }}
         >
-          <Iconify icon={icon} width={32} />
+          <Iconify icon={icon} width={28} />
         </Box>
-        <Box>
+        <Box sx={{ minWidth: 0 }}>
           <Typography variant="h5">{value}</Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             {title}

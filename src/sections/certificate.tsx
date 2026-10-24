@@ -112,9 +112,9 @@ export function CertificatePage() {
 
       {show && (
         <>
-          <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
-            <TextField label="Họ và tên trên giấy" value={name} onChange={(e) => setName(e.target.value)} sx={{ width: 360 }} />
-            <Box sx={{ flexGrow: 1 }} />
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems={{ xs: 'stretch', sm: 'center' }} sx={{ mb: 3 }}>
+            <TextField label="Họ và tên trên giấy" value={name} onChange={(e) => setName(e.target.value)} sx={{ width: { xs: 1, sm: 360 } }} />
+            <Box sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }} />
             <Button
               size="large"
               variant="contained"

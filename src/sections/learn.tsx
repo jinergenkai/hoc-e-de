@@ -206,7 +206,8 @@ export function LearnDeckPage() {
         )}
       </Box>
 
-      <Stack direction="row" spacing={2} sx={{ mt: 4 }}>
+      {/* Buttons keep one line each and share the width on phones */}
+      <Stack direction="row" spacing={{ xs: 1, sm: 2 }} sx={{ mt: 4, '& .MuiButton-root': { whiteSpace: 'nowrap', px: { xs: 1.5, sm: 2.75 } } }}>
         <Button
           size="large"
           variant="text"
@@ -283,7 +284,7 @@ function Face({ word, mode, flipped, misses }: { word: Word; mode: Mode; flipped
         </Box>
 
         {showRade ? (
-          <RadeText sx={{ fontSize: 64, lineHeight: 1.2, textAlign: 'center' }}>{word.rade}</RadeText>
+          <RadeText sx={{ fontSize: { xs: 48, sm: 64 }, lineHeight: 1.2, textAlign: 'center' }}>{word.rade}</RadeText>
         ) : (
           <Typography variant="h2" sx={{ textAlign: 'center' }}>
             {word.vi.join(', ')}
@@ -325,7 +326,12 @@ function Face({ word, mode, flipped, misses }: { word: Word; mode: Mode; flipped
           </>
         ) : (
           <Typography variant="caption" sx={{ color: 'text.disabled', position: 'absolute', bottom: 20 }}>
-            Bấm vào thẻ hoặc nhấn Space để lật
+            Bấm vào thẻ
+            <Box component="span" sx={{ display: { xs: 'none', md: 'inline' } }}>
+              {' '}
+              hoặc nhấn Space
+            </Box>{' '}
+            để lật
           </Typography>
         )}
       </Stack>

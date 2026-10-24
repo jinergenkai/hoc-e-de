@@ -107,7 +107,13 @@ export function BrocadeStripe({ height = 14, sx }: { height?: number; sx?: objec
 
 export function PageTitle({ title, subtitle, action }: { title: string; subtitle?: ReactNode; action?: ReactNode }) {
   return (
-    <Stack direction="row" alignItems="flex-end" justifyContent="space-between" spacing={2} sx={{ mb: 4 }}>
+    <Stack
+      direction={{ xs: 'column', md: 'row' }}
+      alignItems={{ xs: 'stretch', md: 'flex-end' }}
+      justifyContent="space-between"
+      spacing={2}
+      sx={{ mb: { xs: 3, md: 4 } }}
+    >
       <Box sx={{ minWidth: 0 }}>
         <Stack direction="row" alignItems="center" spacing={1.25}>
           <CornerDiamond size={22} />
@@ -120,7 +126,7 @@ export function PageTitle({ title, subtitle, action }: { title: string; subtitle
         )}
         <BrocadeBand motif="sleeve" height={9} sx={{ width: 96, mt: 1.5, borderRadius: 0.5, overflow: 'hidden' }} />
       </Box>
-      {action && <Box sx={{ flexShrink: 0, whiteSpace: 'nowrap' }}>{action}</Box>}
+      {action && <Box sx={{ flexShrink: 0, '& > .MuiStack-root': { flexWrap: 'wrap', gap: 1, '& > :not(style)': { m: 0 } } }}>{action}</Box>}
     </Stack>
   );
 }
@@ -132,6 +138,7 @@ export function KeyHint({ children }: { children: ReactNode }) {
     <Box
       component="kbd"
       sx={{
+        display: { xs: 'none', md: 'inline' }, // keyboard shortcuts mean nothing on a phone
         px: 0.75,
         py: 0.125,
         ml: 1,

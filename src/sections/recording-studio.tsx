@@ -14,7 +14,8 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
-import { alpha } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { alpha, type Theme } from '@mui/material/styles';
 
 import audioManifest from 'src/data/audio-manifest.json';
 import { RECORD_ITEMS, RECORD_TAB_LABEL, type RecordKind, type RecordItem } from 'src/data/record-items';
@@ -50,6 +51,7 @@ function Studio() {
   const [notice, setNotice] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const cloud = useCloud();
+  const isPhone = useMediaQuery((t: Theme) => t.breakpoints.down('sm'));
   const [zipping, setZipping] = useState(false);
 
   useEffect(() => {
@@ -166,13 +168,13 @@ function Studio() {
       )}
 
       <Card sx={{ mb: 3 }}>
-        <Tabs value={kind} onChange={(_, v) => setKind(v)} sx={{ px: 3, borderBottom: (t) => `1px solid ${t.palette.divider}` }}>
+        <Tabs value={kind} onChange={(_, v) => setKind(v)} variant="scrollable" scrollButtons={false} sx={{ px: { xs: 1, sm: 3 }, borderBottom: (t) => `1px solid ${t.palette.divider}` }}>
           {(Object.keys(ITEMS) as Kind[]).map((k) => {
             const n = ITEMS[k].filter((i) => status(i.id) !== 'none').length;
             return <Tab key={k} value={k} label={`${TAB_LABEL[k]} · ${n}/${ITEMS[k].length}`} />;
           })}
         </Tabs>
-        <Stack direction="row" alignItems="center" spacing={3} sx={{ p: 3 }}>
+        <Stack direction={{ xs: 'column', md: 'row' }} alignItems={{ xs: 'stretch', md: 'center' }} spacing={{ xs: 2, md: 3 }} sx={{ p: { xs: 2, sm: 3 } }}>
           <Box sx={{ flexGrow: 1 }}>
             <Stack direction="row" justifyContent="space-between" sx={{ mb: 1 }}>
               <Typography variant="subtitle2">Đã có ghi âm</Typography>
@@ -189,7 +191,7 @@ function Studio() {
             variant={onlyMissing ? 'filled' : 'outlined'}
             onClick={() => setOnlyMissing((v) => !v)}
           />
-          <Button size="large" variant="contained" onClick={() => startSession()} startIcon={<Iconify icon="solar:microphone-3-bold-duotone" />}>
+          <Button size="large" variant="contained" onClick={() => startSession()} sx={{ flexShrink: 0 }} startIcon={<Iconify icon="solar:microphone-3-bold-duotone" />}>
             Ghi liên tục
           </Button>
         </Stack>
@@ -201,21 +203,30 @@ function Studio() {
           return (
             <Box key={item.id}>
               {i > 0 && <Divider sx={{ borderStyle: 'dashed' }} />}
-              <Stack direction="row" alignItems="center" spacing={2} sx={{ px: 3, py: 1.5 }}>
-                <Typography variant="caption" sx={{ color: 'text.disabled', width: 56 }}>
+              <Stack direction="row" alignItems="center" spacing={{ xs: 0.5, sm: 2 }} sx={{ px: { xs: 2, sm: 3 }, py: 1.5 }}>
+                <Typography variant="caption" sx={{ color: 'text.disabled', width: 56, flexShrink: 0, display: { xs: 'none', sm: 'block' } }}>
                   {item.id}
                 </Typography>
-                <RadeText sx={{ fontSize: 20, minWidth: 180 }}>{item.rade}</RadeText>
-                <Typography variant="body2" noWrap sx={{ flexGrow: 1, color: 'text.secondary' }}>
-                  {item.vi}
-                </Typography>
+                {/* Phones: Ê-đê text above its meaning; wider screens: side by side */}
+                <Stack direction={{ xs: 'column', md: 'row' }} alignItems={{ md: 'center' }} spacing={{ md: 2 }} sx={{ flexGrow: 1, minWidth: 0 }}>
+                  <RadeText sx={{ fontSize: { xs: 18, sm: 20 }, minWidth: { md: 180 } }}>{item.rade}</RadeText>
+                  <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
+                    {item.vi}
+                  </Typography>
+                </Stack>
                 <Chip
+                  sx={{ display: { xs: 'none', sm: 'inline-flex' } }}
                   size="small"
                   color={st === 'recorded' || st === 'server' ? 'success' : st === 'bundled' ? 'info' : 'default'}
                   variant={st === 'none' ? 'outlined' : 'filled'}
                   label={STATUS_LABEL[st]}
                 />
-                <IconButton disabled={st === 'none'} onClick={() => void play(item.id)} title="Nghe">
+                <IconButton
+                  disabled={st === 'none'}
+                  onClick={() => void play(item.id)}
+                  title="Nghe"
+                  color={st === 'none' ? 'default' : 'success'}
+                >
                   <Iconify icon="solar:play-circle-bold-duotone" width={24} />
                 </IconButton>
                 <IconButton color="primary" onClick={() => startSession(item.id)} title="Ghi âm">
@@ -243,7 +254,7 @@ function Studio() {
         Nhập/Xuất gói (.zip) dùng để chép ghi âm sang máy khác qua USB khi không có mạng.
       </Typography>
 
-      <Dialog open={Boolean(session)} onClose={() => setSession(null)} maxWidth="md" fullWidth>
+      <Dialog open={Boolean(session)} onClose={() => setSession(null)} maxWidth="md" fullWidth fullScreen={isPhone}>
         {session && <StudioSession list={session.list} start={session.index} onClose={() => setSession(null)} />}
       </Dialog>
     </>
@@ -331,10 +342,10 @@ function StudioSession({ list, start, onClose }: { list: Item[]; start: number; 
       </Stack>
       <LinearProgress variant="determinate" value={((index + 1) / list.length) * 100} sx={{ mx: 3, height: 6 }} />
 
-      <Stack alignItems="center" spacing={1} sx={{ px: 4, pt: 5, pb: 3, textAlign: 'center' }}>
+      <Stack alignItems="center" spacing={1} sx={{ px: { xs: 2, sm: 4 }, pt: { xs: 3, sm: 5 }, pb: 3, textAlign: 'center' }}>
         <AnimatePresence mode="wait">
           <motion.div key={item.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }}>
-            <RadeText sx={{ fontSize: item.rade.length > 16 ? 40 : 64, lineHeight: 1.2 }}>{item.rade}</RadeText>
+            <RadeText sx={{ fontSize: item.rade.length > 16 ? { xs: 28, sm: 40 } : { xs: 44, sm: 64 }, lineHeight: 1.2 }}>{item.rade}</RadeText>
             <Typography variant="h6" sx={{ color: 'text.secondary', mt: 1 }}>
               {item.vi}
             </Typography>
@@ -347,16 +358,16 @@ function StudioSession({ list, start, onClose }: { list: Item[]; start: number; 
         <Typography variant="body2" sx={{ color: err ? 'error.main' : rec.recording ? 'error.main' : 'text.secondary', minHeight: 22 }}>
           {err ||
             (rec.recording
-              ? `Đang ghi… ${(rec.elapsed / 1000).toFixed(1)}s (bấm lại hoặc Space để dừng)`
+              ? `Đang ghi… ${(rec.elapsed / 1000).toFixed(1)}s (bấm lại để dừng)`
               : take
                 ? 'Nghe lại bản vừa ghi. Ưng thì Lưu, chưa ưng thì Ghi lại.'
                 : hasExisting
                   ? 'Mục này đã có ghi âm. Ghi mới sẽ thay bản cũ.'
-                  : 'Bấm micro hoặc Space để bắt đầu ghi.')}
+                  : 'Bấm micro để bắt đầu ghi.')}
         </Typography>
       </Stack>
 
-      <Stack direction="row" spacing={1.5} justifyContent="center" sx={{ px: 3, pb: 4 }}>
+      <Stack direction="row" flexWrap="wrap" gap={1.5} justifyContent="center" sx={{ px: { xs: 2, sm: 3 }, pb: 4 }}>
         <Button color="inherit" disabled={index === 0 || rec.recording} onClick={() => go(index - 1)} startIcon={<Iconify icon="solar:arrow-left-linear" />}>
           Trước
         </Button>
@@ -366,7 +377,7 @@ function StudioSession({ list, start, onClose }: { list: Item[]; start: number; 
         <Button variant="outlined" color="inherit" disabled={rec.recording} onClick={toggle} startIcon={<Iconify icon="solar:refresh-bold" />}>
           Ghi lại <KeyHint>R</KeyHint>
         </Button>
-        <Button variant="contained" disabled={!take || rec.recording} onClick={commit} startIcon={<Iconify icon="solar:check-circle-bold" />}>
+        <Button variant="contained" disabled={!take || rec.recording} onClick={commit} sx={{ order: { xs: -1, sm: 0 }, width: { xs: 1, sm: 'auto' }, py: { xs: 1.25, sm: 0.75 } }} startIcon={<Iconify icon="solar:check-circle-bold" />}>
           Lưu & tiếp <KeyHint>Enter</KeyHint>
         </Button>
         <Button color="inherit" disabled={rec.recording} onClick={() => go(index + 1)} endIcon={<Iconify icon="solar:arrow-right-linear" />}>

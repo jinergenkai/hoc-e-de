@@ -33,19 +33,19 @@ export function GameShell({
   return (
     <Stack sx={{ minHeight: '100vh' }}>
       <BrocadeBand motif="sleeve" height={14} />
-      <Stack direction="row" alignItems="center" spacing={2} sx={{ px: 4, py: 2.5, maxWidth: 1100, width: 1, mx: 'auto' }}>
+      <Stack direction="row" alignItems="center" spacing={{ xs: 1, sm: 2 }} sx={{ px: { xs: 1.5, sm: 4 }, py: { xs: 1.5, sm: 2.5 }, maxWidth: 1100, width: 1, mx: 'auto' }}>
         <IconButton onClick={() => navigate(backTo)} title="Thoát (Esc)">
           <Iconify icon="solar:close-circle-linear" width={28} />
         </IconButton>
-        <Box sx={{ flexGrow: 1 }}>
-          <Typography variant="subtitle2" sx={{ color: 'text.secondary', mb: 0.75 }}>
+        <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+          <Typography variant="subtitle2" noWrap sx={{ color: 'text.secondary', mb: 0.75 }}>
             {title}
           </Typography>
           <LinearProgress variant="determinate" value={Math.min(100, progress)} sx={{ height: 12, bgcolor: (t) => alpha(t.palette.primary.main, 0.12) }} />
         </Box>
         {right}
       </Stack>
-      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', px: 3, pb: 6 }}>
+      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', px: { xs: 2, sm: 3 }, pb: 6 }}>
         {children}
       </Box>
     </Stack>

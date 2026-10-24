@@ -47,7 +47,7 @@ export function AlphabetPage() {
         ))}
       </Grid>
 
-      <Stack direction="row" spacing={1} sx={{ mb: 3 }}>
+      <Stack direction="row" flexWrap="wrap" gap={1} sx={{ mb: 3 }}>
         {(
           [
             ['all', 'Tất cả (38)'],
@@ -60,7 +60,7 @@ export function AlphabetPage() {
         ))}
       </Stack>
 
-      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: 'repeat(auto-fill, minmax(112px, 1fr))' }}>
+      <Box sx={{ display: 'grid', gap: 2, gridTemplateColumns: { xs: 'repeat(3, 1fr)', sm: 'repeat(auto-fill, minmax(112px, 1fr))' } }}>
         {list.map((l, i) => (
           <motion.div key={l.lower} initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: i * 0.015 }}>
             <ButtonBase
@@ -78,7 +78,7 @@ export function AlphabetPage() {
                 '&:hover': { transform: 'translateY(-4px) rotate(-2deg)', bgcolor: 'primary.lighter' },
               }}
             >
-              <RadeText sx={{ fontSize: 40, lineHeight: 1.1, color: l.special ? 'primary.main' : 'text.primary' }}>
+              <RadeText sx={{ fontSize: { xs: 32, sm: 40 }, lineHeight: 1.1, color: l.special ? 'primary.main' : 'text.primary' }}>
                 {l.upper}
                 <Box component="span" sx={{ fontSize: 28, ml: 0.5, opacity: 0.6 }}>
                   {l.lower}
@@ -110,15 +110,15 @@ function LetterDetail({ letter }: { letter: Letter }) {
     .slice(0, 5);
 
   return (
-    <Box sx={{ p: 4 }}>
+    <Box sx={{ p: { xs: 2.5, sm: 4 } }}>
       <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <RadeText sx={{ fontSize: 96, lineHeight: 1, color: 'primary.main' }}>
+        <RadeText sx={{ fontSize: { xs: 72, sm: 96 }, lineHeight: 1, color: 'primary.main' }}>
           {letter.upper}
           {letter.lower}
         </RadeText>
         <AudioButton id={letterId(letter)} size={56} />
       </Stack>
-      <Stack direction="row" spacing={1} sx={{ my: 2 }}>
+      <Stack direction="row" flexWrap="wrap" gap={1} sx={{ my: 2 }}>
         <Chip size="small" label={letter.kind === 'vowel' ? 'Nguyên âm' : 'Phụ âm'} />
         {letter.special && <Chip size="small" color="primary" label="Không có trong tiếng Việt" />}
       </Stack>
@@ -135,7 +135,7 @@ function LetterDetail({ letter }: { letter: Letter }) {
       <Stack spacing={1}>
         {examples.map((w) => (
           <Stack key={w.id} direction="row" alignItems="center" spacing={1.5} sx={{ p: 1.25, borderRadius: 1, bgcolor: 'grey.100' }}>
-            <RadeText sx={{ fontSize: 20, minWidth: 100 }}>{w.rade}</RadeText>
+            <RadeText sx={{ fontSize: 20, minWidth: { xs: 72, sm: 100 } }}>{w.rade}</RadeText>
             <Iconify icon="solar:alt-arrow-right-linear" width={16} sx={{ color: 'text.disabled' }} />
             <Typography variant="body2" sx={{ flexGrow: 1 }}>
               {w.vi.join(', ')}

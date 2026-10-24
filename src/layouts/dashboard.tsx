@@ -1,10 +1,12 @@
 import type { FeatureKey } from 'src/config/release';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
 import Menu from '@mui/material/Menu';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
@@ -39,12 +41,18 @@ export const NAV: { path: string; title: string; icon: string; feature?: Feature
 
 const NAV_WIDTH = 280;
 
+// Like Minimal UI: the sidebar is fixed from `lg` up; below that it becomes a drawer opened from the header
+const LAYOUT_QUERY = 'lg';
+
 // Game screens (/learn/:topic, /challenge/:topic, /practice/:topic) run full-screen.
 const isFocusRoute = (pathname: string) => /^\/(learn|challenge|practice)\/[^/]+/.test(pathname);
 
 export function DashboardLayout() {
   const { pathname } = useLocation();
+  const [navOpen, setNavOpen] = useState(false);
   useFlags((s) => s.rev); // re-render the menu when the admin changes which features are visible
+
+  useEffect(() => setNavOpen(false), [pathname]);
 
   if (isFocusRoute(pathname)) {
     return (
@@ -56,10 +64,32 @@ export function DashboardLayout() {
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
-      <Nav />
+      <Box
+        component="nav"
+        sx={{
+          width: NAV_WIDTH,
+          flexShrink: 0,
+          position: 'sticky',
+          top: 0,
+          height: '100vh',
+          display: { xs: 'none', [LAYOUT_QUERY]: 'flex' },
+          bgcolor: 'background.paper',
+          borderRight: (t) => `1px dashed ${alpha(t.palette.grey[500], 0.24)}`,
+        }}
+      >
+        <NavContent />
+      </Box>
+      <Drawer
+        open={navOpen}
+        onClose={() => setNavOpen(false)}
+        sx={{ display: { [LAYOUT_QUERY]: 'none' } }}
+        slotProps={{ paper: { sx: { width: NAV_WIDTH, display: 'flex' } } }}
+      >
+        <NavContent />
+      </Drawer>
       <Box component="main" sx={{ flexGrow: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
-        <Header />
-        <Box sx={{ px: { xs: 3, lg: 5 }, pt: 1, pb: 8, width: 1, maxWidth: 1280, mx: 'auto' }}>
+        <Header onOpenNav={() => setNavOpen(true)} />
+        <Box sx={{ px: { xs: 2, sm: 3, [LAYOUT_QUERY]: 5 }, pt: 1, pb: 8, width: 1, maxWidth: 1280, mx: 'auto' }}>
           <Outlet />
         </Box>
       </Box>
@@ -69,7 +99,7 @@ export function DashboardLayout() {
 
 // ----------------------------------------------------------------------
 
-function Nav() {
+function NavContent() {
   const todayXp = useTodayXp();
   const dailyGoal = useProgress((s) => s.dailyGoal);
   const pct = Math.min(100, Math.round((todayXp / dailyGoal) * 100));
@@ -77,8 +107,8 @@ function Nav() {
   const items = NAV.filter((n) => !n.feature || isEnabled(n.feature) || showTeasers());
 
   return (
-    <Box component="nav" sx={{ width: NAV_WIDTH, flexShrink: 0, position: 'sticky', top: 0, height: '100vh', display: 'flex', bgcolor: 'background.paper', borderRight: (t) => `1px dashed ${alpha(t.palette.grey[500], 0.24)}` }}>
-      <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
+    <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', minWidth: 0, height: 1 }}>
+      <>
         <BrocadeBand motif="skirt" height={30} />
         <Stack direction="row" alignItems="center" spacing={1.5} sx={{ px: 3, py: 3 }}>
           <Logo />
@@ -131,7 +161,7 @@ function Nav() {
           </Box>
         )}
         <BrocadeBand motif="sleeve" height={14} />
-      </Box>
+      </>
     </Box>
   );
 }
@@ -186,7 +216,7 @@ function Logo() {
 
 // ----------------------------------------------------------------------
 
-function Header() {
+function Header({ onOpenNav }: { onOpenNav: () => void }) {
   const { pathname } = useLocation();
   const xp = useProgress((s) => s.xp);
   const streak = useProgress((s) => s.streak);
@@ -196,10 +226,13 @@ function Header() {
     <Stack
       direction="row"
       alignItems="center"
-      spacing={1.5}
-      sx={{ position: 'sticky', top: 0, zIndex: 10, px: { xs: 3, lg: 5 }, height: 72, backdropFilter: 'blur(6px)', bgcolor: (t) => alpha(t.palette.background.default, 0.8) }}
+      spacing={{ xs: 1, sm: 1.5 }}
+      sx={{ position: 'sticky', top: 0, zIndex: 10, px: { xs: 2, sm: 3, [LAYOUT_QUERY]: 5 }, height: { xs: 64, [LAYOUT_QUERY]: 72 }, backdropFilter: 'blur(6px)', bgcolor: (t) => alpha(t.palette.background.default, 0.8) }}
     >
-      <Typography variant="subtitle1" sx={{ flexGrow: 1, color: 'text.secondary' }}>
+      <IconButton onClick={onOpenNav} sx={{ ml: -1, display: { [LAYOUT_QUERY]: 'none' } }} aria-label="Mở menu">
+        <Iconify icon="solar:hamburger-menu-linear" width={26} />
+      </IconButton>
+      <Typography variant="subtitle1" noWrap sx={{ flexGrow: 1, minWidth: 0, color: 'text.secondary' }}>
         {title}
       </Typography>
       {isEnabled('gamification') && (
@@ -213,7 +246,10 @@ function Header() {
           <Tooltip title="Tổng điểm kinh nghiệm" arrow>
             <Stack direction="row" alignItems="center" spacing={0.5} sx={pill('#E0A100')}>
               <Iconify icon="solar:star-bold-duotone" width={20} />
-              <span>{xp} XP</span>
+              <span>{xp}</span>
+              <Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+                XP
+              </Box>
             </Stack>
           </Tooltip>
         </>
@@ -240,10 +276,11 @@ function ProfileMenu() {
 
   return (
     <>
-      <ButtonBase onClick={(e) => setAnchor(e.currentTarget)} sx={{ borderRadius: 5, pl: 0.5, pr: 1.5, py: 0.5, gap: 1.25, '&:hover': { bgcolor: 'action.hover' } }}>
+      <ButtonBase onClick={(e) => setAnchor(e.currentTarget)} sx={{ borderRadius: 5, pl: 0.5, pr: { xs: 0.5, sm: 1.5 }, py: 0.5, gap: 1.25, flexShrink: 0, '&:hover': { bgcolor: 'action.hover' } }}>
         <ProfileAvatar profile={profile} size={34} />
-        <Box sx={{ textAlign: 'left' }}>
-          <Typography variant="subtitle2" sx={{ lineHeight: 1.2 }}>
+        {/* Phones: avatar only */}
+        <Box sx={{ textAlign: 'left', display: { xs: 'none', sm: 'block' } }}>
+          <Typography variant="subtitle2" noWrap sx={{ lineHeight: 1.2, maxWidth: 140 }}>
             {profile.name}
           </Typography>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
@@ -268,7 +305,8 @@ function ProfileMenu() {
 }
 
 const pill = (color: string) => ({
-  px: 1.5,
+  px: { xs: 1, sm: 1.5 },
+  flexShrink: 0,
   height: 36,
   borderRadius: 5,
   typography: 'subtitle2',

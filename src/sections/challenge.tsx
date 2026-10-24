@@ -219,7 +219,7 @@ export function ChallengePlayPage() {
       {phase === 'count' ? (
         <AnimatePresence mode="wait">
           <motion.div key={count} initial={{ scale: 2, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.5, opacity: 0 }}>
-            <Typography variant="h1" sx={{ fontSize: 160, color: 'primary.main' }}>
+            <Typography variant="h1" sx={{ fontSize: { xs: 96, sm: 160 }, color: 'primary.main' }}>
               {count || 'Bắt đầu!'}
             </Typography>
           </motion.div>
@@ -266,7 +266,7 @@ export function ChallengePlayPage() {
             <Box key={n} sx={{ position: 'absolute' }}>
               <SwipeCard ref={cardRef} onSwipe={onSwipe} leftLabel="Sai" rightLabel="Đúng">
                 <Stack sx={{ height: 1, p: 4 }} alignItems="center" justifyContent="center" spacing={2}>
-                  <RadeText sx={{ fontSize: 60, lineHeight: 1.2 }}>{round.word.rade}</RadeText>
+                  <RadeText sx={{ fontSize: { xs: 44, sm: 60 }, lineHeight: 1.2 }}>{round.word.rade}</RadeText>
                   <Iconify icon="solar:transfer-horizontal-bold-duotone" width={32} sx={{ color: 'text.disabled', transform: 'rotate(90deg)' }} />
                   <Typography variant="h3" sx={{ textAlign: 'center' }}>
                     {round.shown}
@@ -276,12 +276,12 @@ export function ChallengePlayPage() {
             </Box>
           </Box>
 
-          <Stack direction="row" spacing={2} sx={{ mt: 4 }}>
+          <Stack direction="row" spacing={2} sx={{ mt: 4, width: { xs: 1, sm: 'auto' } }}>
             <Button
               size="large"
               onClick={() => cardRef.current?.swipe('left')}
               startIcon={<Iconify icon="solar:close-circle-bold" />}
-              sx={{ minWidth: 160, color: 'error.dark', bgcolor: (t) => alpha(t.palette.error.main, 0.12), '&:hover': { bgcolor: (t) => alpha(t.palette.error.main, 0.24) } }}
+              sx={{ flex: { xs: 1, sm: 'none' }, minWidth: { sm: 160 }, color: 'error.dark', bgcolor: (t) => alpha(t.palette.error.main, 0.12), '&:hover': { bgcolor: (t) => alpha(t.palette.error.main, 0.24) } }}
             >
               Sai <KeyHint>←</KeyHint>
             </Button>
@@ -289,7 +289,7 @@ export function ChallengePlayPage() {
               size="large"
               onClick={() => cardRef.current?.swipe('right')}
               endIcon={<Iconify icon="solar:check-circle-bold" />}
-              sx={{ minWidth: 160, color: 'success.dark', bgcolor: (t) => alpha(t.palette.success.main, 0.12), '&:hover': { bgcolor: (t) => alpha(t.palette.success.main, 0.24) } }}
+              sx={{ flex: { xs: 1, sm: 'none' }, minWidth: { sm: 160 }, color: 'success.dark', bgcolor: (t) => alpha(t.palette.success.main, 0.12), '&:hover': { bgcolor: (t) => alpha(t.palette.success.main, 0.24) } }}
             >
               <KeyHint>→</KeyHint> Đúng
             </Button>

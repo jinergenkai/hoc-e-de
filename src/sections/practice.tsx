@@ -270,7 +270,7 @@ export function PracticePlayPage() {
       backTo="/practice"
       right={<ScorePill score={score} />}
     >
-      <Card sx={{ width: 760, maxWidth: '94vw', p: 5 }}>
+      <Card sx={{ width: 760, maxWidth: 1, p: { xs: 2.5, sm: 5 } }}>
         <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
           <Chip size="small" label={dir === 'rade-vi' ? 'Dịch sang tiếng Việt' : 'Dịch sang tiếng Ê-đê'} color="primary" variant="outlined" />
           <Chip size="small" label={kind === 'word' ? 'Từ' : 'Câu'} />
@@ -278,7 +278,7 @@ export function PracticePlayPage() {
 
         <Stack direction="row" alignItems="center" spacing={2} sx={{ my: 3 }}>
           {q.promptLang === 'rade' ? (
-            <RadeText sx={{ fontSize: kind === 'word' ? 48 : 30, lineHeight: 1.3 }}>{q.prompt}</RadeText>
+            <RadeText sx={{ fontSize: kind === 'word' ? { xs: 36, sm: 48 } : { xs: 24, sm: 30 }, lineHeight: 1.3 }}>{q.prompt}</RadeText>
           ) : (
             <Typography variant={kind === 'word' ? 'h2' : 'h4'}>{q.prompt}</Typography>
           )}
