@@ -6,8 +6,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { ABOUT } from 'src/config/about';
-import { SAMPLE_DATA_NOTICE } from 'src/data/vocab';
-import { RELEASE, RELEASES } from 'src/config/release';
 
 import { Iconify } from 'src/components/iconify';
 import { PageTitle } from 'src/components/common';
@@ -44,7 +42,7 @@ export function AboutPage() {
                 {ABOUT.initiative}
               </Typography>
               <Typography variant="caption" sx={{ display: 'block', mt: 2, opacity: 0.6 }}>
-                Phiên bản {__APP_VERSION__} · Đợt {RELEASE}/{RELEASES.length}
+                Phiên bản {__APP_VERSION__}
               </Typography>
             </Box>
           </Stack>
@@ -124,10 +122,6 @@ export function AboutPage() {
             Nguồn & ghi nhận
           </Typography>
           <Card sx={{ p: 3 }}>
-            <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 2.5, p: 1.5, borderRadius: 1, bgcolor: 'warning.lighter', color: 'warning.darker' }}>
-              <Iconify icon="solar:info-circle-bold-duotone" width={22} />
-              <Typography variant="body2">{SAMPLE_DATA_NOTICE}. Nội dung chính thức sẽ do chuyên gia tiếng Ê-đê cung cấp và duyệt.</Typography>
-            </Stack>
             <Grid container spacing={2}>
               {CREDITS.map((c) => (
                 <Grid key={c.name} size={{ xs: 12, sm: 6 }}>

@@ -5,7 +5,6 @@ import { useState } from 'react';
 import confetti from 'canvas-confetti';
 
 import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
 import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import IconButton from '@mui/material/IconButton';
@@ -13,7 +12,6 @@ import Typography from '@mui/material/Typography';
 import { alpha } from '@mui/material/styles';
 
 import audioManifest from 'src/data/audio-manifest.json';
-import { SAMPLE_DATA_NOTICE } from 'src/data/vocab';
 import { useRecordings, recordingUrl } from 'src/store/recordings';
 
 import { Iconify } from './iconify';
@@ -103,22 +101,6 @@ export function AudioButton({ id, size = 44 }: { id: string; size?: number }) {
 /** Kept for existing call sites: a diamond brocade band without edges. */
 export function BrocadeStripe({ height = 14, sx }: { height?: number; sx?: object }) {
   return <BrocadeBand motif="skirt" height={height} sx={sx} />;
-}
-
-// ----------------------------------------------------------------------
-
-export function SampleDataChip() {
-  return (
-    <Tooltip title="Từ vựng, câu mẫu và ghi chú phát âm sẽ được thay bằng dữ liệu đã duyệt" arrow>
-      <Chip
-        size="small"
-        color="warning"
-        variant="outlined"
-        icon={<Iconify icon="solar:info-circle-bold-duotone" width={16} />}
-        label={SAMPLE_DATA_NOTICE}
-      />
-    </Tooltip>
-  );
 }
 
 // ----------------------------------------------------------------------

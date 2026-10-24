@@ -14,7 +14,7 @@ import CardActionArea from '@mui/material/CardActionArea';
 import type { CultureItem } from 'src/data/culture';
 import { wordById } from 'src/data/vocab';
 import cultureImages from 'src/data/culture-images.json';
-import { culture, CULTURE_NOTICE } from 'src/data/culture';
+import { culture } from 'src/data/culture';
 
 import { Iconify } from 'src/components/iconify';
 import { RadeText, PageTitle, AudioButton } from 'src/components/common';
@@ -30,7 +30,6 @@ export function CulturePage() {
       <PageTitle
         title="Góc văn hoá"
         subtitle="Tìm hiểu đời sống, phong tục của người Ê-đê và học từ vựng gắn với từng chủ đề."
-        action={<Chip size="small" color="warning" variant="outlined" label={CULTURE_NOTICE} />}
       />
 
       <Grid container spacing={3}>

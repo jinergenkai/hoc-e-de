@@ -12,6 +12,8 @@ import { DashboardLayout } from 'src/layouts/dashboard';
 import { EXPIRES, RELEASE, RELEASES, isExpired, isEnabled, IS_PREVIEW } from 'src/config/release';
 
 import { HomePage } from 'src/sections/home';
+import { AdminPage } from 'src/sections/admin';
+import { RemoteRecordPage } from 'src/sections/remote-record';
 import { AboutPage } from 'src/sections/about';
 import { CulturePage } from 'src/sections/culture';
 import { CertificatePage } from 'src/sections/certificate';
@@ -71,6 +73,10 @@ function PreviewBadge() {
 
 // Hash routing: the built app is loaded from file:// inside Electron.
 const router = createHashRouter([
+  // Phone recording page for invited native speakers: standalone, no profile picker or menu
+  { path: '/thu-am', element: <RemoteRecordPage /> },
+  // Admin sits outside the profile picker / expiry gate: it must stay reachable whatever is hidden
+  { element: <DashboardLayout />, children: [{ path: '/quan-tri', element: <AdminPage /> }] },
   {
     element: <Root />,
     children: [

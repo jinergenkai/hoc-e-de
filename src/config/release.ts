@@ -39,17 +39,51 @@ const env = import.meta.env;
 const parsed = Number(env.VITE_RELEASE);
 export const RELEASE = Number.isFinite(parsed) && parsed >= 1 ? Math.min(parsed, RELEASES.length) : RELEASES.length;
 
-export const SHOW_TEASERS = env.VITE_TEASERS !== '0';
 export const IS_PREVIEW = env.VITE_PREVIEW === '1';
 export const EXPIRES: string | null = env.VITE_EXPIRES || null;
 
-const enabledSet = new Set(RELEASES.filter((r) => r.n <= RELEASE).flatMap((r) => r.features));
+// Which features are visible. Starts from the build (VITE_RELEASE) and can be overridden
+// at runtime by the admin setting (see store/flags.ts) so features can be revealed gradually.
+let enabledSet = new Set(RELEASES.filter((r) => r.n <= RELEASE).flatMap((r) => r.features));
+let teasers = env.VITE_TEASERS !== '0';
+
+export const ALL_FEATURES: FeatureKey[] = RELEASES.flatMap((r) => r.features);
+
+export const FEATURE_LABELS: Record<FeatureKey, string> = {
+  learn: 'Học thẻ',
+  alphabet: 'Bảng chữ cái',
+  challenge: 'Thử thách quẹt 60 giây',
+  gamification: 'Điểm XP, chuỗi ngày, mục tiêu ngày',
+  practiceWord: 'Luyện dịch từ',
+  dictionary: 'Từ điển',
+  practiceSentence: 'Luyện dịch câu',
+  translate: 'Dịch thông minh',
+  profiles: 'Nhiều hồ sơ người học, xếp hạng',
+  recording: 'Ghi âm nội dung (người soạn)',
+  speak: 'Luyện nói (ghi giọng mình)',
+  certificate: 'Chứng nhận hoàn thành',
+  culture: 'Góc văn hoá',
+};
+
+export type FlagsConfig = { features: FeatureKey[] | null; teasers: boolean };
+
+/** Override the visible features (null = keep the build default). */
+export function applyFlags(cfg: Partial<FlagsConfig> | null | undefined) {
+  if (!cfg) return;
+  if (Array.isArray(cfg.features)) enabledSet = new Set(cfg.features.filter((f): f is FeatureKey => ALL_FEATURES.includes(f as FeatureKey)));
+  if (typeof cfg.teasers === 'boolean') teasers = cfg.teasers;
+}
+
+export const currentFlags = (): FlagsConfig => ({ features: ALL_FEATURES.filter((f) => enabledSet.has(f)), teasers });
 
 export const isEnabled = (f: FeatureKey) => enabledSet.has(f);
 
+/** Whether hidden features still appear in the menu as locked "Sắp ra mắt" entries. */
+export const showTeasers = () => teasers;
+
 export const releaseOf = (f: FeatureKey) => RELEASES.find((r) => r.features.includes(f));
 
-export const upcoming = () => RELEASES.filter((r) => r.n > RELEASE);
+export const upcoming = () => RELEASES.filter((r) => r.features.some((f) => !enabledSet.has(f)));
 
 /** Preview builds stop working after VITE_EXPIRES (local clock — a deterrent, not DRM). */
 export const isExpired = (now = new Date()) => Boolean(EXPIRES && now > new Date(`${EXPIRES}T23:59:59`));

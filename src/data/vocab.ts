@@ -28,8 +28,6 @@ export type Sentence = {
   note?: string;
 };
 
-export const SAMPLE_DATA_NOTICE = 'Dữ liệu mẫu, chưa được chuyên gia tiếng Ê-đê duyệt';
-
 export const topics: Topic[] = [
   { id: 'xung-ho', name: 'Xưng hô', icon: 'solar:users-group-rounded-bold-duotone', color: 'primary' },
   { id: 'gia-dinh', name: 'Gia đình', icon: 'solar:home-smile-bold-duotone', color: 'secondary' },

@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import Box from '@mui/material/Box';
@@ -18,8 +19,8 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { alpha } from '@mui/material/styles';
 
 import audioManifest from 'src/data/audio-manifest.json';
-import { alphabet } from 'src/data/alphabet';
-import { words, sentences } from 'src/data/vocab';
+import { RECORD_ITEMS, RECORD_TAB_LABEL, type RecordKind, type RecordItem } from 'src/data/record-items';
+import { REMOTE_AVAILABLE } from 'src/remote/api';
 import { useRecordings } from 'src/store/recordings';
 import { playBlob, useRecorder } from 'src/hooks/use-recorder';
 import { unlockAdmin, isAdminUnlocked } from 'src/config/admin';
@@ -29,16 +30,10 @@ import { BrocadeBand } from 'src/components/ornaments';
 import { MicButton, micErrorText } from 'src/components/recorder-ui';
 import { KeyHint, RadeText, PageTitle, playAudio } from 'src/components/common';
 
-type Kind = 'word' | 'sentence' | 'letter';
-type Item = { id: string; rade: string; vi: string };
-
-const ITEMS: Record<Kind, Item[]> = {
-  word: words.map((w) => ({ id: w.id, rade: w.rade, vi: w.vi.join(', ') })),
-  sentence: sentences.map((s) => ({ id: s.id, rade: s.rade, vi: s.vi })),
-  letter: alphabet.map((l) => ({ id: `l-${l.lower}`, rade: `${l.upper} ${l.lower}`, vi: l.note })),
-};
-
-const TAB_LABEL: Record<Kind, string> = { word: 'Từ vựng', sentence: 'Câu', letter: 'Chữ cái' };
+type Kind = RecordKind;
+type Item = RecordItem;
+const ITEMS = RECORD_ITEMS;
+const TAB_LABEL = RECORD_TAB_LABEL;
 const bundled = audioManifest as Record<string, string>;
 
 export function RecordingStudioPage() {
@@ -97,6 +92,7 @@ function Studio() {
   const [session, setSession] = useState<{ list: Item[]; index: number } | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   const status = (id: string) => (ids.has(id) ? 'recorded' : bundled[id] ? 'bundled' : 'none');
   const items = ITEMS[kind];
@@ -135,6 +131,11 @@ function Studio() {
         subtitle="Người bản ngữ ghi âm từng từ, câu và chữ cái. Ghi âm lưu ngay trên máy và dùng cho nút nghe trong toàn bộ ứng dụng."
         action={
           <Stack direction="row" spacing={1}>
+            {REMOTE_AVAILABLE && (
+              <Button color="inherit" variant="outlined" onClick={() => navigate('/quan-tri')} startIcon={<Iconify icon="solar:cloud-upload-bold-duotone" />}>
+                Thu âm từ xa
+              </Button>
+            )}
             <Button color="inherit" variant="outlined" onClick={() => fileRef.current?.click()} startIcon={<Iconify icon="solar:upload-bold-duotone" />}>
               Nhập gói
             </Button>

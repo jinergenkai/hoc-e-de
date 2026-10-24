@@ -3,7 +3,7 @@
 Phần mềm học tiếng Ê-đê cho người Việt, chạy trên máy tính Windows, không cần mạng:
 học thẻ quẹt có chấm điểm, thử thách quẹt 60 giây, luyện dịch Việt ↔ Ê-đê có chấm điểm, dịch thông minh (tra từ điển + luật ngữ pháp), bảng chữ cái 38 chữ, từ điển.
 
-> ⚠️ Từ vựng, câu và ghi chú phát âm hiện là **dữ liệu mẫu chưa được chuyên gia duyệt**.
+
 
 ## Chạy thử
 
@@ -18,6 +18,21 @@ npm run dist:win       # đóng gói .exe (chạy trên Windows)
 
 Mỗi lần đẩy lên nhánh `master`, GitHub Actions build file `.exe` đầy đủ (tab **Actions → Build Windows app → Artifacts**).
 Muốn build bản theo đợt (chỉ mở một phần tính năng, có nhãn xem trước, có hạn dùng): **Run workflow** và nhập đợt — xem [docs/06](docs/06-releases-roadmap.md).
+
+## Thu âm từ xa & ẩn/hiện tính năng (Vercel)
+
+Bản đưa lên Vercel có thêm hai trang (bản cài Windows không có):
+
+- **`/#/thu-am`** — người Ê-đê mở link trên điện thoại, đọc từng từ/câu/chữ cái. Bản ghi lưu trên máy rồi tự gửi lên (mất mạng thì chờ, có nút **Gửi lại**).
+- **`/#/quan-tri`** — đăng nhập bằng mật khẩu quản trị: nghe và **Duyệt/Xoá** bản ghi, copy link mời, **Tải gói đã duyệt (.zip)** (file tên theo mã `w001.webm`…; giải nén vào `public/audio/` rồi build lại là thẻ có giọng cứng), và tab **Tính năng hiển thị** để bật/tắt từng tab (hiện dần theo đợt; tắt "Sắp ra mắt" thì tab chưa mở bị ẩn hẳn).
+
+Cài đặt một lần trên Vercel:
+
+1. Project → **Storage → Create → Blob**, chọn **Private**, nối vào project (tự có `BLOB_READ_WRITE_TOKEN`).
+2. Project → **Settings → Environment Variables**: thêm `ADMIN_PASSWORD` (mật khẩu trang quản trị) và `RECORDER_CODE` (mã mời, một chuỗi khó đoán). Deploy lại.
+3. Mở `https://<tên-miền>/#/quan-tri`, đăng nhập, copy link mời gửi cho người đọc.
+
+Chạy thử cả API trên máy: `npx vercel dev` (cần `vercel link` và `vercel env pull`). `npm run dev` chỉ chạy giao diện, các trang này sẽ không gọi được máy chủ.
 
 ## Thêm âm thanh
 

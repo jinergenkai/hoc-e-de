@@ -18,7 +18,7 @@ import { alphabet, ALPHABET_FACTS } from 'src/data/alphabet';
 
 import { Iconify } from 'src/components/iconify';
 import { CornerDiamond } from 'src/components/ornaments';
-import { RadeText, PageTitle, AudioButton, SampleDataChip } from 'src/components/common';
+import { RadeText, PageTitle, AudioButton } from 'src/components/common';
 
 const letterId = (l: Letter) => `l-${l.lower}`;
 
@@ -30,7 +30,7 @@ export function AlphabetPage() {
 
   return (
     <>
-      <PageTitle title="Bảng chữ cái Êđê" subtitle="Bŏh hră Êđê · 38 chữ cái. Bấm vào chữ để xem cách đọc và từ ví dụ." action={<SampleDataChip />} />
+      <PageTitle title="Bảng chữ cái Êđê" subtitle="Bŏh hră Êđê · 38 chữ cái. Bấm vào chữ để xem cách đọc và từ ví dụ." />
 
       <Grid container spacing={2.5} sx={{ mb: 4 }}>
         {ALPHABET_FACTS.map((f, i) => (

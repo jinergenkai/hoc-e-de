@@ -17,7 +17,7 @@ import { Iconify } from 'src/components/iconify';
 import { TopicGrid } from 'src/components/topic-grid';
 import { SwipeCard, type SwipeCardHandle } from 'src/components/swipe-card';
 import { GameShell, ScorePill, ResultCard } from 'src/components/game-shell';
-import { KeyHint, RadeText, PageTitle, celebrate, shuffle, SampleDataChip } from 'src/components/common';
+import { KeyHint, RadeText, PageTitle, celebrate, shuffle } from 'src/components/common';
 
 const DURATION = 60;
 
@@ -29,7 +29,6 @@ export function ChallengePickPage() {
       <PageTitle
         title="Thử thách quẹt 60 giây"
         subtitle={`Nghĩa đúng → quẹt phải, nghĩa sai → quẹt trái. Đúng liên tiếp để nhân điểm! Kỷ lục của bạn: ${best} điểm.`}
-        action={<SampleDataChip />}
       />
       <TopicGrid includeAll onPick={(id) => navigate(`/challenge/${id}`)} />
     </>

@@ -12,14 +12,14 @@ import { alpha } from '@mui/material/styles';
 import { words, topicById } from 'src/data/vocab';
 import { dayKey, levelOf, useProgress } from 'src/store/progress';
 
-import { isEnabled, upcoming, SHOW_TEASERS } from 'src/config/release';
+import { isEnabled, upcoming, showTeasers } from 'src/config/release';
 
 import { Iconify } from 'src/components/iconify';
 import { SpeakPractice } from 'src/components/recorder-ui';
 import { Leaderboard } from 'src/sections/profiles';
 import { Pompom, BROCADE, BrocadeBand, CornerDiamond, brocadeBackdrop } from 'src/components/ornaments';
 import { TopicGrid } from 'src/components/topic-grid';
-import { RadeText, AudioButton, SampleDataChip } from 'src/components/common';
+import { RadeText, AudioButton } from 'src/components/common';
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -55,7 +55,6 @@ export function HomePage() {
         <Grid size={{ xs: 12, md: 8 }}>
           <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 2 }}>
             <Typography variant="h5">Chủ đề</Typography>
-            <SampleDataChip />
           </Stack>
           <TopicGrid onPick={(id) => navigate(`/learn/${id}`)} columns={{ xs: 12, sm: 6, lg: 6 }} />
         </Grid>
@@ -64,7 +63,7 @@ export function HomePage() {
             <WordOfDay />
             {isEnabled('profiles') && <Leaderboard />}
             <Recent sessions={sessions} />
-            {SHOW_TEASERS && upcoming().length > 0 && <ComingSoon />}
+            {showTeasers() && upcoming().length > 0 && <ComingSoon />}
           </Stack>
         </Grid>
       </Grid>

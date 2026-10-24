@@ -21,7 +21,7 @@ import { SpeakPractice } from 'src/components/recorder-ui';
 import { BROCADE, brocadeBackdrop } from 'src/components/ornaments';
 import { SwipeCard, type SwipeCardHandle } from 'src/components/swipe-card';
 import { GameShell, ScorePill, ResultCard } from 'src/components/game-shell';
-import { KeyHint, RadeText, PageTitle, AudioButton, celebrate, shuffle, SampleDataChip } from 'src/components/common';
+import { KeyHint, RadeText, PageTitle, AudioButton, celebrate, shuffle } from 'src/components/common';
 
 const DECK_SIZE = 15;
 
@@ -32,7 +32,6 @@ export function LearnPickPage() {
       <PageTitle
         title="Học thẻ"
         subtitle="Thuộc thì quẹt phải, chưa thuộc thì quẹt trái: thẻ sẽ quay lại cho tới khi bạn nhớ."
-        action={<SampleDataChip />}
       />
       <TopicGrid includeAll onPick={(id) => navigate(`/learn/${id}`)} />
     </>

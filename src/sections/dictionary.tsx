@@ -13,7 +13,7 @@ import { useProgress } from 'src/store/progress';
 
 import { Iconify } from 'src/components/iconify';
 import { RadeInput } from 'src/components/rade-input';
-import { RadeText, PageTitle, AudioButton, SampleDataChip } from 'src/components/common';
+import { RadeText, PageTitle, AudioButton } from 'src/components/common';
 
 import { exampleFor } from './learn';
 
@@ -50,7 +50,7 @@ export function DictionaryPage() {
 
   return (
     <>
-      <PageTitle title="Từ điển" subtitle="Tra hai chiều Ê-đê ↔ Việt. Gõ không dấu vẫn tìm được (ví dụ: buon → ƀuôn)." action={<SampleDataChip />} />
+      <PageTitle title="Từ điển" subtitle="Tra hai chiều Ê-đê ↔ Việt. Gõ không dấu vẫn tìm được (ví dụ: buon → ƀuôn)." />
 
       <Card sx={{ p: 3, mb: 3 }}>
         <RadeInput value={q} onChange={setQ} placeholder="Tìm từ tiếng Ê-đê hoặc tiếng Việt…" autoFocus />

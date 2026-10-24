@@ -14,9 +14,10 @@ import Typography from '@mui/material/Typography';
 import LinearProgress from '@mui/material/LinearProgress';
 import { alpha } from '@mui/material/styles';
 
+import { useFlags } from 'src/store/flags';
 import { useProfiles } from 'src/store/profiles';
 import { levelOf, useProgress, useTodayXp } from 'src/store/progress';
-import { isEnabled, releaseOf, SHOW_TEASERS } from 'src/config/release';
+import { isEnabled, releaseOf, showTeasers } from 'src/config/release';
 
 import { Iconify } from 'src/components/iconify';
 import { ProfileAvatar } from 'src/sections/profiles';
@@ -43,6 +44,7 @@ const isFocusRoute = (pathname: string) => /^\/(learn|challenge|practice)\/[^/]+
 
 export function DashboardLayout() {
   const { pathname } = useLocation();
+  useFlags((s) => s.rev); // re-render the menu when the admin changes which features are visible
 
   if (isFocusRoute(pathname)) {
     return (
@@ -72,7 +74,7 @@ function Nav() {
   const dailyGoal = useProgress((s) => s.dailyGoal);
   const pct = Math.min(100, Math.round((todayXp / dailyGoal) * 100));
 
-  const items = NAV.filter((n) => !n.feature || isEnabled(n.feature) || SHOW_TEASERS);
+  const items = NAV.filter((n) => !n.feature || isEnabled(n.feature) || showTeasers());
 
   return (
     <Box component="nav" sx={{ width: NAV_WIDTH, flexShrink: 0, position: 'sticky', top: 0, height: '100vh', display: 'flex', bgcolor: 'background.paper', borderRight: (t) => `1px dashed ${alpha(t.palette.grey[500], 0.24)}` }}>

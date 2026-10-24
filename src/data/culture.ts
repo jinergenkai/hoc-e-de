@@ -90,4 +90,3 @@ export const culture: CultureItem[] = [
   },
 ];
 
-export const CULTURE_NOTICE = 'Nội dung mẫu, chờ khách bổ sung ảnh và duyệt nội dung';

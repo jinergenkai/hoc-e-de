@@ -20,7 +20,7 @@ import { words, sentences, wordById } from 'src/data/vocab';
 
 import { Iconify } from 'src/components/iconify';
 import { RadeInput } from 'src/components/rade-input';
-import { KeyHint, RadeText, PageTitle, SampleDataChip } from 'src/components/common';
+import { KeyHint, RadeText, PageTitle } from 'src/components/common';
 
 const translator = createTranslator(words, sentences);
 
@@ -81,7 +81,6 @@ export function TranslatePage() {
       <PageTitle
         title="Dịch thông minh"
         subtitle="Dịch Việt ↔ Ê-đê ngay trên máy, không cần mạng. Gõ câu ngắn để có kết quả tốt nhất."
-        action={<SampleDataChip />}
       />
 
       <Card sx={{ overflow: 'visible' }}>

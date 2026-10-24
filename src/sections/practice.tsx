@@ -22,7 +22,7 @@ import { Iconify } from 'src/components/iconify';
 import { RadeInput } from 'src/components/rade-input';
 import { TopicGrid } from 'src/components/topic-grid';
 import { GameShell, ScorePill, ResultCard } from 'src/components/game-shell';
-import { KeyHint, RadeText, PageTitle, AudioButton, celebrate, shuffle, SampleDataChip } from 'src/components/common';
+import { KeyHint, RadeText, PageTitle, AudioButton, celebrate, shuffle } from 'src/components/common';
 
 type Dir = 'rade-vi' | 'vi-rade';
 type Kind = 'word' | 'sentence';
@@ -41,7 +41,7 @@ export function PracticeSetupPage() {
 
   return (
     <>
-      <PageTitle title="Luyện dịch" subtitle="Gõ bản dịch, máy chấm ngay: Đúng 10đ · Gần đúng 5đ · Sai 0đ." action={<SampleDataChip />} />
+      <PageTitle title="Luyện dịch" subtitle="Gõ bản dịch, máy chấm ngay: Đúng 10đ · Gần đúng 5đ · Sai 0đ." />
 
       <Typography variant="overline" sx={{ color: 'text.secondary' }}>
         1. Chiều dịch
